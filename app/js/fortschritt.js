@@ -171,7 +171,12 @@ window.Fortschritt = {
   },
 
   _renderStreak(rows) {
-    const tage = [...new Set(rows.map(r => r[0]))].sort().reverse();
+    const tage = [...new Set(rows.map(r => r[0]))]
+      .sort((a, b) => {
+        const toComparable = s => s.split('.').reverse().join('');
+        return toComparable(a) < toComparable(b) ? -1 : 1;
+      })
+      .reverse();
     let streak = 0;
     let prevWeek = null;
 

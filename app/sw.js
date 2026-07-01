@@ -1,10 +1,10 @@
 const CACHE = 'fitness-v1';
 const ASSETS = [
-  '/', '/index.html', '/styles.css', '/manifest.json',
-  '/js/config.js', '/js/data.js', '/js/rotation.js',
-  '/js/auth.js', '/js/sheets.js', '/js/heute.js',
-  '/js/training.js', '/js/ernaehrung.js', '/js/fortschritt.js',
-  '/js/app.js', '/icons/icon-192.png', '/icons/icon-512.png'
+  './', 'index.html', 'styles.css', 'manifest.json',
+  'js/config.js', 'js/data.js', 'js/rotation.js',
+  'js/auth.js', 'js/sheets.js', 'js/heute.js',
+  'js/training.js', 'js/ernaehrung.js', 'js/fortschritt.js',
+  'js/app.js', 'icons/icon-192.png', 'icons/icon-512.png'
 ];
 
 self.addEventListener('install', e => {

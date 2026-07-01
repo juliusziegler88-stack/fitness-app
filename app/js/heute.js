@@ -121,6 +121,20 @@ window.Heute = {
         this.gegessen.carbs   += parseFloat(r[5]) || 0;
         this.gegessen.fett    += parseFloat(r[6]) || 0;
       });
+
+      // Mark logged meals as done
+      const loggedMeals = rows
+        .filter(r => r[0] === heute)
+        .map(r => r[1]); // column 1 = Mahlzeit name
+
+      loggedMeals.forEach(mahlzeit => {
+        const id = mahlzeit.replace(/\s/g, '');
+        const check = document.getElementById(`check-${id}`);
+        const nameEl = document.querySelector(`#meal-${id} .meal-name`);
+        if (check) check.classList.add('done');
+        if (nameEl) nameEl.classList.add('done');
+      });
+
       this._renderRings();
       this._renderBars();
     } catch (e) {
