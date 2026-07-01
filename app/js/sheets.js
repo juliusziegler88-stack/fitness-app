@@ -19,7 +19,7 @@ window.Sheets = {
   // Zeile anhängen: row = ['Wert1', 'Wert2', ...]
   async append(sheet, row) {
     await this._req(
-      `/values/${encodeURIComponent(sheet)}!A1:Z1:append?valueInputOption=USER_ENTERED`,
+      `/values/${encodeURIComponent(sheet)}:append?valueInputOption=USER_ENTERED`,
       'POST',
       { values: [row] }
     );
