@@ -37,8 +37,8 @@ window.App = {
     toast.id = 'toast';
     document.body.appendChild(toast);
 
-    // Initialer Tab
-    this.showTab('heute');
+    // Auto-Login versuchen, dann initialer Tab
+    Auth.autoSignIn().finally(() => this.showTab('heute'));
   }
 };
 
