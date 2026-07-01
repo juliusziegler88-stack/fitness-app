@@ -53,7 +53,16 @@ window.Training = {
         <button class="btn btn-primary" id="btn-start-log">▶ Einheit starten</button>
       ` : `
         <div id="log-container">
-          ${alleUebungen.map(u => this._renderExerciseRow(u)).join('')}
+          ${plan.map((ss, i) => {
+            const uebungen = ss.uebungen.filter(u => !u.includes('Conditioning') && u !== 'Core');
+            if (!uebungen.length) return '';
+            return `
+              <div class="superset-group">
+                <div class="superset-label">Superset ${i + 1} · ${ss.saetze} Sätze</div>
+                ${uebungen.map(u => this._renderExerciseRow(u)).join('')}
+              </div>
+            `;
+          }).join('')}
         </div>
         <button class="btn btn-primary" id="btn-save-log" style="margin-top:8px">✓ Einheit abschließen</button>
         <button class="btn btn-ghost" id="btn-cancel-log" style="margin-top:8px">Abbrechen</button>

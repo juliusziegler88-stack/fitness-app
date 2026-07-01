@@ -226,6 +226,22 @@ input:focus { outline: none; border-color: var(--accent); }
 }
 .chip.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent-dim); }
 
+/* Superset Group */
+.superset-group {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.superset-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+
 /* Exercise Log */
 .exercise-row {
   background: var(--card2);
