@@ -1,0 +1,45 @@
+window.App = {
+  currentTab: 'heute',
+
+  showTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${name}`).classList.add('active');
+    document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+    this.currentTab = name;
+
+    if (name === 'heute') window.Heute?.render();
+    if (name === 'training') window.Training?.render();
+    if (name === 'ernaehrung') window.Ernaehrung?.render();
+    if (name === 'fortschritt') window.Fortschritt?.render();
+  },
+
+  showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  },
+
+  init() {
+    // Service Worker registrieren
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.showTab(btn.dataset.tab));
+    });
+
+    // Toast Element einfügen
+    const toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+
+    // Initialer Tab
+    this.showTab('heute');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
