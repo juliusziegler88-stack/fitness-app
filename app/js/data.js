@@ -225,6 +225,7 @@ window.Data = {
           zubereitung: 'Hüttenkäse würzen und auf das Brot streichen, Gurke in Scheiben dazu legen.'
         }
       ],
+      afterWorkout: [],
       abendessen: [
         {
           name: 'Hähnchen-Salat mit Senf-Dressing',
