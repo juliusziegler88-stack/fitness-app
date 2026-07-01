@@ -55,7 +55,14 @@ window.Training = {
         <div id="log-container">
           ${plan.map((ss, i) => {
             const uebungen = ss.uebungen.filter(u => !u.includes('Conditioning') && u !== 'Core');
-            if (!uebungen.length) return '';
+            if (!uebungen.length) {
+              return `
+                <div class="superset-group">
+                  <div class="superset-label">Finisher</div>
+                  ${ss.uebungen.map(u => `<div style="padding:4px 0;font-size:15px;color:var(--text-muted)">· ${u}</div>`).join('')}
+                </div>
+              `;
+            }
             return `
               <div class="superset-group">
                 <div class="superset-label">Superset ${i + 1} · ${ss.saetze} Sätze</div>
