@@ -1,11 +1,10 @@
 window.Rotation = {
   // Trainingstage: Mo (1), Mi (3), Fr (5) | Sa (6) = Ausdauer | Rest = Ruhetag
-  // Start: 7. Juli 2026 (erster Montag der App)
+  // Start: 6. Juli 2026 (erster Montag der App)
   START: new Date('2026-07-06T00:00:00'),
 
-  getToday() {
-    const now = new Date();
-    const dow = now.getDay(); // 0=So, 1=Mo, 2=Di, 3=Mi, 4=Do, 5=Fr, 6=Sa
+  getForDate(date) {
+    const dow = date.getDay(); // 0=So, 1=Mo, 2=Di, 3=Mi, 4=Do, 5=Fr, 6=Sa
 
     if (dow === 6) {
       return { typ: 'ausdauer', label: 'Ausdauertag', badgeClass: 'badge-ausdauer' };
@@ -15,7 +14,7 @@ window.Rotation = {
     }
 
     // Welche KW seit Start → gerade/ungerade bestimmt Woche 1 oder 2
-    const diffMs = now - this.START;
+    const diffMs = date - this.START;
     const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
     const isWeek1 = diffWeeks % 2 === 0;
 
@@ -31,6 +30,10 @@ window.Rotation = {
       label: `Trainingstag ${typ}`,
       badgeClass: 'badge-training'
     };
+  },
+
+  getToday() {
+    return this.getForDate(new Date());
   },
 
   getDatenKey(typ) {
