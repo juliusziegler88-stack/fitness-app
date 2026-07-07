@@ -37,8 +37,14 @@ window.App = {
     toast.id = 'toast';
     document.body.appendChild(toast);
 
+    // Wartende Einträge automatisch nachsenden, sobald wieder Netz da ist
+    window.addEventListener('online', () => Sheets.flushPending());
+
     // Auto-Login versuchen, dann initialer Tab
-    Auth.autoSignIn().finally(() => this.showTab('heute'));
+    Auth.autoSignIn().finally(() => {
+      Sheets.flushPending();
+      this.showTab('heute');
+    });
   }
 };
 

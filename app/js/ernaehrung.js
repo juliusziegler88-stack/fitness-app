@@ -130,10 +130,10 @@ window.Ernaehrung = {
     const row = [datum, this.aktiveMahlzeit, rezept.name, kcal, protein, carbs, fett];
 
     try {
-      await Sheets.append('Ernaehrungs_Log', row);
+      await Sheets.appendSafe('Ernaehrungs_Log', row);
       App.showToast(`${rezept.name} eingetragen ✓`);
     } catch (e) {
-      App.showToast('Offline – konnte nicht speichern');
+      App.showToast('Offline – wird automatisch nachgesendet ✓');
     }
 
     await this._loadGegessen();

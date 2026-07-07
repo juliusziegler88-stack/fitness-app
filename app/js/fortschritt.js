@@ -79,8 +79,12 @@ window.Fortschritt = {
     const val = document.getElementById('input-gewicht').value;
     if (!val) return;
     const datum = new Date().toLocaleDateString('de-DE');
-    await Sheets.append('Koerper', [datum, val]);
-    App.showToast('Gewicht gespeichert ✓');
+    try {
+      await Sheets.appendSafe('Koerper', [datum, val]);
+      App.showToast('Gewicht gespeichert ✓');
+    } catch (e) {
+      App.showToast('Offline – wird automatisch nachgesendet ✓');
+    }
     document.getElementById('input-gewicht').value = '';
     const rows = await Sheets.getAll('Koerper');
     this._renderGewichtChart(rows);
