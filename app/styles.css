@@ -1,12 +1,13 @@
 :root {
-  --bg: #0f0f0f;
-  --card: #1a1a2e;
-  --card2: #16213e;
-  --accent: #52b788;
-  --accent-dim: #2d6a4f;
-  --text: #e0e0e0;
-  --text-muted: #888;
-  --danger: #e05252;
+  --bg: #FBF7F0;
+  --card: #FFFFFF;
+  --card2: #F4EDE2;
+  --accent: #6B8F71;
+  --accent-dim: #E4E9DE;
+  --text: #2B2620;
+  --text-muted: #8A8175;
+  --danger: #C1503F;
+  --border: #F0E7D8;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -96,7 +97,7 @@ body {
   width: 100%;
 }
 .btn:active { opacity: 0.7; }
-.btn-primary { background: var(--accent); color: #0f0f0f; }
+.btn-primary { background: var(--accent); color: var(--text); }
 .btn-secondary { background: var(--card2); color: var(--text); }
 .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent-dim); }
 
@@ -195,7 +196,7 @@ input:focus { outline: none; border-color: var(--accent); }
   transition: all 0.2s;
 }
 .meal-check.done { border-color: var(--accent); background: var(--accent); }
-.meal-check.done::after { content: "✓"; color: #0f0f0f; font-size: 13px; font-weight: 700; }
+.meal-check.done::after { content: "✓"; color: var(--text); font-size: 13px; font-weight: 700; }
 .meal-name { font-weight: 500; }
 .meal-name.done { color: var(--text-muted); text-decoration: line-through; }
 .exercise-name.done { color: var(--text-muted); text-decoration: line-through; }
@@ -273,7 +274,7 @@ input:focus { outline: none; border-color: var(--accent); }
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: var(--accent);
-  color: #0f0f0f;
+  color: var(--text);
   padding: 10px 20px;
   border-radius: 20px;
   font-weight: 600;
