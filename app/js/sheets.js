@@ -62,6 +62,7 @@ window.Sheets = {
 
   // Versucht alle wartenden Zeilen erneut zu senden; behält nur die, die weiterhin fehlschlagen.
   async flushPending() {
+    if (!Auth.isSignedIn()) return; // kein ungefragtes Login-Popup beim Start/online-Event
     const pending = this.getPending();
     if (!pending.length) return;
     const remaining = [];

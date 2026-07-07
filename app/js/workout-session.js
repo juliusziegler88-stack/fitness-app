@@ -127,9 +127,12 @@ window.WorkoutSession = {
     if (isKraft) {
       alleUebungen.forEach(u => {
         const id = u.replace(/\s/g, '_');
-        document.getElementById(`check_${id}`)?.addEventListener('click', () => {
+        const checkEl = document.getElementById(`check_${id}`);
+        checkEl?.addEventListener('click', () => {
           this.toggleChecked(session, u);
-          this._renderActive(el, workout, session);
+          const done = !!session.checked[u];
+          checkEl.classList.toggle('done', done);
+          checkEl.nextElementSibling?.classList.toggle('done', done);
         });
       });
     }
