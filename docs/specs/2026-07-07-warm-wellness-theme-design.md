@@ -48,9 +48,10 @@ In `app/js/heute.js`, `_renderRings()`, das `items`-Array:
 
 ## Hartkodierte Textfarben in `app/styles.css`
 
-Zwei Stellen nutzen `#0f0f0f` (Text auf Akzentfarbe) fest verdrahtet statt einer Variable:
-- `.btn-primary { color: #0f0f0f; }` → `color: var(--text);`
-- `#toast { color: #0f0f0f; }` → `color: var(--text);`
+Drei Stellen nutzen `#0f0f0f` (Text auf Akzentfarbe) fest verdrahtet statt einer Variable:
+- `.btn-primary { color: #0f0f0f; }` (Zeile 99) → `color: var(--text);`
+- `.meal-check.done::after { color: #0f0f0f; }` (Zeile 198) → `color: var(--text);`
+- `#toast { color: #0f0f0f; }` (Zeile 276) → `color: var(--text);`
 
 Damit folgen beide automatisch der neuen Textfarbe, statt weiterhin einen Restwert aus dem alten Dark-Theme zu tragen.
 
