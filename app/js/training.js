@@ -1,8 +1,8 @@
 window.Training = {
-  today: null,
+  selectedDate: null,
 
   render() {
-    this.today = Rotation.getToday();
+    this.selectedDate = new Date();
     const el = document.getElementById('tab-training');
 
     const activeSession = WorkoutSession.getSession();
@@ -13,7 +13,7 @@ window.Training = {
     }
 
     el.innerHTML = `
-      <span class="day-badge ${this._badgeClass()}">${this._badgeLabel()}</span>
+      <div id="day-nav"></div>
       <div class="section-title">Workout wählen</div>
       <div id="workout-picker">
         ${Data.workouts.map(w => `
@@ -27,6 +27,8 @@ window.Training = {
       <div id="history-container"></div>
     `;
 
+    this._renderDayNav();
+
     document.querySelectorAll('#workout-picker [data-workout]').forEach(card => {
       card.addEventListener('click', () => {
         const workout = Data.workouts.find(w => w.id === card.dataset.workout);
@@ -37,12 +39,54 @@ window.Training = {
     this._renderHistory();
   },
 
-  _badgeClass() {
-    return { A: 'badge-training', B: 'badge-training', ausdauer: 'badge-ausdauer', ruhetag: 'badge-ruhetag' }[this.today.typ];
+  _getMonday(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    return d;
   },
 
-  _badgeLabel() {
-    return { A: 'Trainingstag A', B: 'Trainingstag B', ausdauer: 'Ausdauertag', ruhetag: 'Ruhetag' }[this.today.typ];
+  _getWeekDays(date) {
+    const monday = this._getMonday(date);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      return d;
+    });
+  },
+
+  _isSameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  },
+
+  _renderDayNav() {
+    const el = document.getElementById('day-nav');
+    if (!el) return;
+    const labels = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    const today = new Date();
+    const weekDays = this._getWeekDays(this.selectedDate);
+    const info = Rotation.getForDate(this.selectedDate);
+
+    el.innerHTML = `
+      <div class="day-nav-row">
+        ${weekDays.map((d, i) => `
+          <div class="day-nav-item ${this._isSameDay(d, this.selectedDate) ? 'selected' : ''}" data-date="${d.toISOString()}">
+            <div class="day-nav-circle">${labels[i]}</div>
+            ${this._isSameDay(d, today) ? '<div class="day-nav-today-dot"></div>' : ''}
+          </div>
+        `).join('')}
+      </div>
+      <span class="day-badge ${info.badgeClass}">${info.label}</span>
+    `;
+
+    el.querySelectorAll('.day-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        this.selectedDate = new Date(item.dataset.date);
+        this._renderDayNav();
+      });
+    });
   },
 
   async _renderHistory() {
