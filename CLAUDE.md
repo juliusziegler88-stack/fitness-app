@@ -42,3 +42,9 @@ Push auf `main` löst automatisch das GitHub-Pages-Deployment aus (kein manuelle
 ## Workout-Picker Feature (07.07.2026)
 
 Training-Tab zeigt jetzt einen tagesunabhängigen Workout-Picker (Ganzkörper A/B, Running) statt eines starr an die A/B-Rotation gebundenen Einzel-Workouts. Persistenter Timer + Übungs-Checkboxen (State in `localStorage`, übersteht Reload). Generische Offline-Warteschlange in `sheets.js` für alle drei Sheets. Details: `docs/specs/2026-07-07-workout-picker-design.md`, `docs/plans/2026-07-07-workout-picker.md`.
+
+## Farb-Theme: "Warm Wellness" (07.07.2026)
+
+Helles, warmes Theme statt des ursprünglichen Dark Mode — Creme-Hintergrund (`#FBF7F0`), Salbeigrün als Akzent (`#6B8F71`), warme Sekundärfarben (Senfgelb/Terrakotta/Rosé) für Makro-Ringe, Charts und Tages-Badges. Alle Farben hängen an den `:root`-Variablen in `app/styles.css`; `heute.js` (Ring-Farben) und `fortschritt.js` (Chart-Farben) tragen zusätzlich eigene Hex-Werte, die mit den Tokens synchron gehalten werden müssen. Details: `docs/specs/2026-07-07-warm-wellness-theme-design.md`, `docs/plans/2026-07-07-warm-wellness-theme.md`.
+
+**Achtung beim lokalen Testen mit `python3 -m http.server`:** Der Server sendet keine Cache-Control-Header, wodurch Safari hartnäckig alte JS-Dateien aus dem Festplatten-Cache ziehen kann, selbst nach Reload/neuem Tab (unabhängig vom Service-Worker-Cache). Im Zweifel per `curl` direkt gegen den Server prüfen, ob die Datei wirklich aktuell ist, bevor man dem Browser misstraut — auf der echten Live-Seite (GitHub Pages) tritt das nicht auf.
