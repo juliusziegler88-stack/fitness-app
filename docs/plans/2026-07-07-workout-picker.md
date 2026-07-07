@@ -29,7 +29,7 @@
 - [ ] **Step 1: Schreibe das Node-Verifikationsskript und führe es aus, um zu bestätigen, dass es (mangels `Data.workouts`) fehlschlägt**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && node -e "
+node -e "
 global.window = {};
 require('./app/js/data.js');
 const w = window.Data.workouts;
@@ -65,7 +65,7 @@ Expected: `OK: Data.workouts`
 - [ ] **Step 4: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/data.js && git commit -m "feat: add Data.workouts as rotation-independent workout list"
+git add app/js/data.js && git commit -m "feat: add Data.workouts as rotation-independent workout list"
 ```
 
 ---
@@ -82,7 +82,7 @@ cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Impr
 - [ ] **Step 1: Node-Verifikationsskript schreiben und ausführen (soll fehlschlagen, da `appendSafe`/`flushPending` fehlen)**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && node -e "
+node -e "
 function makeLocalStorage() {
   const store = {};
   return {
@@ -212,7 +212,7 @@ Expected: `OK: sheets.js offline queue`
 - [ ] **Step 4: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/sheets.js && git commit -m "feat: add offline queue with automatic retry to Sheets client"
+git add app/js/sheets.js && git commit -m "feat: add offline queue with automatic retry to Sheets client"
 ```
 
 ---
@@ -305,7 +305,7 @@ Expected: Alle drei Toast-Varianten erscheinen wie beschrieben, kein Datenverlus
 - [ ] **Step 5: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/app.js app/js/ernaehrung.js app/js/fortschritt.js && git commit -m "feat: wire offline queue into app startup, nutrition and body weight logging"
+git add app/js/app.js app/js/ernaehrung.js app/js/fortschritt.js && git commit -m "feat: wire offline queue into app startup, nutrition and body weight logging"
 ```
 
 ---
@@ -323,7 +323,7 @@ cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Impr
 - [ ] **Step 1: Node-Verifikationsskript schreiben und ausführen (soll fehlschlagen, Datei existiert noch nicht)**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && node -e "
+node -e "
 function makeLocalStorage() {
   const store = {};
   return {
@@ -428,7 +428,7 @@ Expected: `OK: workout-session.js persistence + timer`
 - [ ] **Step 5: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/workout-session.js app/index.html && git commit -m "feat: add WorkoutSession persistence and timer logic"
+git add app/js/workout-session.js app/index.html && git commit -m "feat: add WorkoutSession persistence and timer logic"
 ```
 
 ---
@@ -681,7 +681,7 @@ Expected: Timer zählt sichtbar hoch, Checkbox-Status übersteht Reload, kein Fe
 - [ ] **Step 4: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/workout-session.js app/styles.css && git commit -m "feat: add WorkoutSession rendering for preview, active session and save"
+git add app/js/workout-session.js app/styles.css && git commit -m "feat: add WorkoutSession rendering for preview, active session and save"
 ```
 
 ---
@@ -782,7 +782,7 @@ Expected: Alle drei Workouts sind an jedem Wochentag startbar, unabhängig vom R
 - [ ] **Step 3: Commit**
 
 ```bash
-cd "/Users/juliusziegler/Library/Mobile Documents/com~apple~CloudDocs/Pers. Improvement/Projekt 3 Fitness App" && git add app/js/training.js && git commit -m "feat: rewrite training tab as day-independent workout picker"
+git add app/js/training.js && git commit -m "feat: rewrite training tab as day-independent workout picker"
 ```
 
 ---

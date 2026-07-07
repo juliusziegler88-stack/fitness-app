@@ -198,6 +198,7 @@ input:focus { outline: none; border-color: var(--accent); }
 .meal-check.done::after { content: "✓"; color: #0f0f0f; font-size: 13px; font-weight: 700; }
 .meal-name { font-weight: 500; }
 .meal-name.done { color: var(--text-muted); text-decoration: line-through; }
+.exercise-name.done { color: var(--text-muted); text-decoration: line-through; }
 
 /* Day Badge */
 .day-badge {
