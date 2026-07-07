@@ -50,10 +50,10 @@ window.Heute = {
 
   _renderRings() {
     const items = [
-      { key: 'kcal',    label: 'kcal',    color: '#52b788' },
-      { key: 'protein', label: 'Protein', color: '#52a8e0' },
-      { key: 'carbs',   label: 'Carbs',   color: '#e0b852' },
-      { key: 'fett',    label: 'Fett',    color: '#e08852' }
+      { key: 'kcal',    label: 'kcal',    color: '#6B8F71' },
+      { key: 'protein', label: 'Protein', color: '#C9963F' },
+      { key: 'carbs',   label: 'Carbs',   color: '#B5652F' },
+      { key: 'fett',    label: 'Fett',    color: '#A56B7A' }
     ];
     const C = 2 * Math.PI * 26; // circumference für r=26
 
