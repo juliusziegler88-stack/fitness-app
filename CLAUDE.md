@@ -15,9 +15,10 @@ Persönliches Fitness-Dashboard als PWA — Training, Ernährung, Fortschritt, G
 - **Live-URL:** https://juliusziegler88-stack.github.io/fitness-app/
 - **GitHub:** https://github.com/juliusziegler88-stack/fitness-app
 - **Google Spreadsheet:** `1N8rGnOhqKCQqZJjp7HjyCiPO1lR-vDDdOFHxT1bu5iw` ("Fitness App Data")
-- **Google Cloud Projekt:** intern "fitness-app" genannt, tatsächliche Projekt-ID kann abweichen (Anzeigename ≠ ID) — im Zweifel über den Projekt-Umschalter in der Cloud Console nach "fitness" suchen, nicht die ID raten
-- **Google OAuth Client ID:** `300859094998-fv26s5mescenvkk2udfmi2h6abioc2nt.apps.googleusercontent.com`
-- **Autorisierte JS-Origins für OAuth:** Live-URL + `http://localhost:8080` (für lokales Testen ergänzt am 07.07.2026)
+- **Google Cloud Projekt:** "Fitness App v2" (ersetzt das ursprüngliche Projekt, siehe "Bekannte offene Punkte" unten — Anzeigename ≠ Projekt-ID, im Zweifel über den Projekt-Umschalter nach "fitness" suchen, nicht die ID raten)
+- **Google OAuth Client ID:** `839647146031-024ia48bl57ctekpbfeth9ku9m0dp7ct.apps.googleusercontent.com`
+- **Autorisierte JS-Origins für OAuth:** Live-URL + `http://localhost:8080`
+- **Wichtig:** Das Spreadsheet gehört dem Konto `julius.ziegler88@gmail.com` (nicht dem Mayakakao-Konto) — als Bearbeiter freigegeben. Falls ein neues Google-Konto je die App nutzen soll, muss das Sheet zuerst explizit mit dessen E-Mail geteilt werden ("Teilen"-Button im Spreadsheet), sonst gibt die API 403 PERMISSION_DENIED zurück, obwohl OAuth-Login und Scope korrekt sind.
 
 ## Lokales Testen
 
@@ -35,9 +36,9 @@ Push auf `main` löst automatisch das GitHub-Pages-Deployment aus (kein manuelle
 
 ## Bekannte offene Punkte (Stand 07.07.2026)
 
-- **Google Sheets API gibt 403 PERMISSION_DENIED zurück**, obwohl: Konto korrekt, Scope korrekt (`.../auth/spreadsheets`), Token gültig, Sheets API in Cloud Console aktiviert. Wirkt nach einer tieferliegenden Altlast in der OAuth-Zustimmungsbildschirm-Konfiguration (zeigte einen unkonfigurierten "Erste Schritte"-Button statt der Scope-Liste). Noch nicht gelöst — vermutlich hilft ein komplettes Neuanlegen der OAuth-Anmeldedaten. Betrifft alle drei Sheets (Training_Log, Ernaehrungs_Log, Koerper), nicht nur den neuen Workout-Picker.
+- ~~Google Sheets API gibt 403 PERMISSION_DENIED zurück~~ **Gelöst (07.07.2026).** Root Cause war nicht die OAuth-Konfiguration (Origin, Scope, API-Aktivierung, Client — alles war schon korrekt), sondern: das Spreadsheet gehörte einem **anderen Google-Konto** (`julius.ziegler@mayakakao.de`) als dem, mit dem sich die App anmeldet (`julius.ziegler88@gmail.com`). Der Browser zeigte beim direkten Öffnen des Sheet-Links trotzdem Zugriff, weil er ohnehin mit dem Mayakakao-Konto eingeloggt war — das hat die Fehlersuche lange in die falsche Richtung gelenkt. Fix: Sheet explizit mit `julius.ziegler88@gmail.com` geteilt. Nebenbei wurde ein neues, sauberes Google-Cloud-Projekt ("Fitness App v2") mit neuem OAuth-Client angelegt, da der alte Zustimmungsbildschirm einen unklaren "Erste Schritte"-Zustand hatte (siehe neue Client-ID oben) — im Nachhinein war das wahrscheinlich nicht die eigentliche Ursache, aber schadet nicht.
 - **Feature-Wunsch:** Bodyweight-Übungen (z.B. Klimmzüge) sollten kein Gewicht-Eingabefeld zeigen, nur Wiederholungen — aktuell zeigt jede Kraft-Übung Gewicht/Sätze/Wdh einheitlich.
-- **Feature-Wunsch:** Möglichkeit, ein Training nachträglich mit einem anderen (vergangenen) Datum zu speichern, statt immer mit dem heutigen Datum — für den Fall, dass man das Eintragen vergisst.
+- **In Arbeit:** Möglichkeit, ein Training nachträglich mit einem anderen (vergangenen) Datum zu speichern, statt immer mit dem heutigen Datum — für den Fall, dass man das Eintragen vergisst.
 
 ## Workout-Picker Feature (07.07.2026)
 
