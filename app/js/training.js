@@ -23,6 +23,7 @@ window.Training = {
           </div>
         `).join('')}
       </div>
+      <div class="section-title" style="cursor:pointer;text-decoration:underline" id="btn-nachtragen">+ Training nachtragen</div>
       <div class="section-title">Letzte Einheiten</div>
       <div id="history-container"></div>
     `;
@@ -35,6 +36,8 @@ window.Training = {
         WorkoutSession.render(workout);
       });
     });
+
+    document.getElementById('btn-nachtragen').addEventListener('click', () => Nachtrag.render());
 
     this._renderHistory();
   },
