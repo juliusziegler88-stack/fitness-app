@@ -50,7 +50,7 @@ body {
   max-width: 480px;
   display: flex;
   background: var(--card);
-  border-top: 1px solid #2a2a3e;
+  border-top: 1px solid var(--border);
   padding-bottom: var(--safe-bottom);
   z-index: 100;
 }
@@ -114,7 +114,7 @@ body {
 /* Inputs */
 input[type="number"], input[type="text"] {
   background: var(--card2);
-  border: 1px solid #2a2a3e;
+  border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
   font-size: 16px;
@@ -183,7 +183,7 @@ input:focus { outline: none; border-color: var(--accent); }
   align-items: center;
   gap: 12px;
   padding: 14px 0;
-  border-bottom: 1px solid #2a2a3e;
+  border-bottom: 1px solid var(--border);
   cursor: pointer;
 }
 .meal-item:last-child { border-bottom: none; }
@@ -210,16 +210,16 @@ input:focus { outline: none; border-color: var(--accent); }
   font-weight: 600;
   margin-bottom: 16px;
 }
-.badge-training { background: #1a3a2e; color: var(--accent); }
-.badge-ausdauer { background: #1a2a3a; color: #52a8e0; }
-.badge-ruhetag { background: #2a1a1a; color: #e08852; }
+.badge-training { background: var(--accent-dim); color: var(--accent); }
+.badge-ausdauer { background: #F3E9D3; color: #C9963F; }
+.badge-ruhetag { background: #EFE3E7; color: #A56B7A; }
 
 /* Chip Filter */
 .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .chip {
   padding: 6px 14px;
   border-radius: 20px;
-  border: 1px solid #2a2a3e;
+  border: 1px solid var(--border);
   background: var(--card);
   color: var(--text-muted);
   font-size: 13px;

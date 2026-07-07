@@ -26,7 +26,7 @@ window.Fortschritt = {
 
       <div class="card">
         <div class="section-title">Trainingsgewicht</div>
-        <select id="uebung-select" style="background:var(--card2);border:1px solid #2a2a3e;border-radius:8px;color:var(--text);font-size:15px;padding:10px 12px;width:100%;margin-bottom:12px">
+        <select id="uebung-select" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;padding:10px 12px;width:100%;margin-bottom:12px">
           ${this._getAlleUebungen().map(u => `<option value="${u}">${u}</option>`).join('')}
         </select>
         <div class="chart-container">
@@ -105,11 +105,11 @@ window.Fortschritt = {
         datasets: [{
           label: 'Gewicht (kg)',
           data,
-          borderColor: '#52b788',
-          backgroundColor: 'rgba(82,183,136,0.1)',
+          borderColor: '#6B8F71',
+          backgroundColor: 'rgba(107,143,113,0.1)',
           tension: 0.3,
           pointRadius: 4,
-          pointBackgroundColor: '#52b788'
+          pointBackgroundColor: '#6B8F71'
         }]
       },
       options: this._chartOptions('kg')
@@ -134,11 +134,11 @@ window.Fortschritt = {
         datasets: [{
           label: `${uebung} (kg)`,
           data,
-          borderColor: '#52a8e0',
-          backgroundColor: 'rgba(82,168,224,0.1)',
+          borderColor: '#C9963F',
+          backgroundColor: 'rgba(201,150,63,0.1)',
           tension: 0.3,
           pointRadius: 4,
-          pointBackgroundColor: '#52a8e0'
+          pointBackgroundColor: '#C9963F'
         }]
       },
       options: this._chartOptions('kg')
@@ -218,8 +218,8 @@ window.Fortschritt = {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#888', maxTicksLimit: 6 }, grid: { color: '#2a2a3e' } },
-        y: { ticks: { color: '#888', callback: v => `${v} ${unit}` }, grid: { color: '#2a2a3e' } }
+        x: { ticks: { color: '#8A8175', maxTicksLimit: 6 }, grid: { color: '#F0E7D8' } },
+        y: { ticks: { color: '#8A8175', callback: v => `${v} ${unit}` }, grid: { color: '#F0E7D8' } }
       }
     };
   }
