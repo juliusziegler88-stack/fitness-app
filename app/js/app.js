@@ -22,9 +22,17 @@ window.App = {
   },
 
   init() {
-    // Service Worker registrieren
+    // Service Worker registrieren, Update-Check aktiv erzwingen statt auf Safaris
+    // eigenen (unzuverlässigen) Hintergrund-Zeitplan zu warten. Sobald eine neue
+    // Version die Kontrolle übernimmt, Seite automatisch neu laden.
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('sw.js').then(reg => reg.update());
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloaded) return;
+        reloaded = true;
+        window.location.reload();
+      });
     }
 
     // Navigation
