@@ -1,4 +1,4 @@
-const CACHE = 'fitness-v9';
+const CACHE = 'fitness-v10';
 const ASSETS = [
   './', 'index.html', 'styles.css', 'manifest.json',
   'js/config.js', 'js/data.js', 'js/rotation.js',
@@ -22,7 +22,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.url.includes('googleapis') || e.request.url.includes('accounts.google')) return;
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: 'no-store' })
       .then(res => {
         const resClone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, resClone));
