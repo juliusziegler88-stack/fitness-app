@@ -44,7 +44,7 @@ Push auf `main` löst automatisch das GitHub-Pages-Deployment aus (kein manuelle
   2. `fetch(e.request)` respektiert standardmäßig den normalen HTTP-Cache des Browsers — GitHub Pages liefert alle Dateien mit `cache-control: max-age=600`, wodurch der "Netzwerk-Fetch" innerhalb von 10 Minuten trotzdem eine alte HTTP-gecachte Antwort zurückgab. Fix: `fetch(e.request, { cache: 'no-store' })`.
   3. **Der eigentliche Kern des Problems:** Beide Fixes oben ändern nur, *wie* eine bereits aktive neue Service-Worker-Version Anfragen beantwortet — sie setzen voraus, dass diese neue Version überhaupt erst installiert wird. Das Erkennen einer neuen `sw.js`-Version passiert aber standardmäßig nach Safaris eigenem, undokumentiertem Hintergrund-Zeitplan, der auf iOS nachweislich unzuverlässig ist (bestätigt: selbst kompletter Safari-Neustart hat nichts gebracht — SW-Zustand ist persistent und unabhängig vom Browser-Prozess). Fix: `app/js/app.js` ruft nach der Registrierung aktiv `registration.update()` auf (erzwingt bei **jedem** App-Start eine Prüfung, statt auf Safari zu warten) und lädt die Seite automatisch neu (`location.reload()`), sobald eine neue Version über `controllerchange` die Kontrolle übernimmt.
   - **Wichtige Einschränkung:** Dieser Fix kann sich nicht selbst ausliefern, wenn ein Gerät bereits in einem alten, unzuverlässigen Service-Worker feststeckt — der alte SW liefert ja gerade das alte `app.js` aus, das den Fix noch nicht enthält (Henne-Ei-Problem). Für bereits betroffene Geräte ist einmalig ein manueller Reset nötig (iPhone: Einstellungen → Safari → Erweitert → Websitedaten → Eintrag für `juliusziegler88-stack.github.io` löschen). Danach sollte sich die App bei jedem zukünftigen Deploy selbst aktuell halten, ohne dass das nochmal nötig ist.
-  - Cache-Version weiterhin bei jeder JS-Änderung hochzählen (jetzt `fitness-v11`) — bleibt relevant für den Offline-Fallback (`caches.match` bei fehlgeschlagenem Fetch).
+  - Cache-Version weiterhin bei jeder JS-Änderung hochzählen (aktueller Stand siehe `app/sw.js`) — bleibt relevant für den Offline-Fallback (`caches.match` bei fehlgeschlagenem Fetch).
   - **`app/reset.html`:** Alternative zum manuellen Websitedaten-Löschen in den iPhone-Einstellungen, falls ein Gerät trotz obiger Fixes nochmal feststeckt. Funktioniert, weil eine komplett neue, im alten Cache nie vorhandene Datei vom alten Service Worker zwangsläufig aus dem echten Netzwerk geladen wird (Cache-Miss → Fallback auf `fetch`). Die Seite meldet den aktiven Service Worker ab, löscht alle Caches und leitet zurück zur App. Aufruf: `https://juliusziegler88-stack.github.io/fitness-app/app/reset.html`.
 
 ## Workout-Picker Feature (07.07.2026)
@@ -91,3 +91,14 @@ Neue Workout-Kategorie `typ: 'sonstiges'` (z.B. "Fußball") ohne Timer/Live-Sess
 ## Training nachtragen (08.07.2026)
 
 Link "+ Training nachtragen" unter der Workout-Auswahl im Training-Tab öffnet ein eigenes, zustandsloses Formular (neues Modul `app/js/nachtrag.js`): Workout wählen → Datum frei wählbar (Standard: gestern) → bei Kraft-Workouts Gewicht/Sätze/Wdh pro Übung (ohne Timer, ohne Checkbox, ohne "Letztes Mal") → Speichern schreibt direkt in `Training_Log` mit dem gewählten statt dem heutigen Datum. Details: `docs/specs/2026-07-07-training-nachtragen-design.md`, `docs/plans/2026-07-07-training-nachtragen.md`.
+
+## Status (Stand: 09.07.2026, Ende Session)
+
+Diese Session behoben/fertiggestellt:
+- Live-Update-Problem des Service Workers vollständig gelöst (dreischichtiger Fix, siehe oben) — inkl. `app/reset.html` als Notfall-Escape-Hatch für künftig feststeckende Geräte.
+- Neue Kategorie "Sonstige Aktivität" (Training nachtragen + direkt im Workout-Picker) live und getestet.
+- Dauerhafter Login über Cloudflare-Worker-Refresh-Flow gebaut, deployed **und von Julius auf dem iPhone als funktionierend bestätigt** (kein Login-Popup mehr nach Safari-Neustart).
+
+**Für die nächste Session offen:**
+- Feature-Wunsch: Bodyweight-Übungen (z.B. Klimmzüge) sollten kein Gewicht-Eingabefeld zeigen, nur Wiederholungen (siehe "Bekannte offene Punkte" oben) — noch nicht angegangen.
+- Sonst nichts Bekanntes offen; Julius sagte "alles andere machen wir morgen weiter" ohne konkretes neues Thema zu nennen — beim nächsten Mal nachfragen, was ansteht.
