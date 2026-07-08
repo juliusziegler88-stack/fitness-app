@@ -34,11 +34,11 @@ git add <datei> && git commit -m "..." && git push
 ```
 Push auf `main` löst automatisch das GitHub-Pages-Deployment aus (kein manueller Schritt nötig).
 
-## Bekannte offene Punkte (Stand 07.07.2026)
+## Bekannte offene Punkte (Stand 08.07.2026)
 
 - ~~Google Sheets API gibt 403 PERMISSION_DENIED zurück~~ **Gelöst (07.07.2026).** Root Cause war nicht die OAuth-Konfiguration (Origin, Scope, API-Aktivierung, Client — alles war schon korrekt), sondern: das Spreadsheet gehörte einem **anderen Google-Konto** (`julius.ziegler@mayakakao.de`) als dem, mit dem sich die App anmeldet (`julius.ziegler88@gmail.com`). Der Browser zeigte beim direkten Öffnen des Sheet-Links trotzdem Zugriff, weil er ohnehin mit dem Mayakakao-Konto eingeloggt war — das hat die Fehlersuche lange in die falsche Richtung gelenkt. Fix: Sheet explizit mit `julius.ziegler88@gmail.com` geteilt. Nebenbei wurde ein neues, sauberes Google-Cloud-Projekt ("Fitness App v2") mit neuem OAuth-Client angelegt, da der alte Zustimmungsbildschirm einen unklaren "Erste Schritte"-Zustand hatte (siehe neue Client-ID oben) — im Nachhinein war das wahrscheinlich nicht die eigentliche Ursache, aber schadet nicht.
 - **Feature-Wunsch:** Bodyweight-Übungen (z.B. Klimmzüge) sollten kein Gewicht-Eingabefeld zeigen, nur Wiederholungen — aktuell zeigt jede Kraft-Übung Gewicht/Sätze/Wdh einheitlich.
-- **In Arbeit:** Möglichkeit, ein Training nachträglich mit einem anderen (vergangenen) Datum zu speichern, statt immer mit dem heutigen Datum — für den Fall, dass man das Eintragen vergisst.
+- **Offenes Problem (seit 08.07.2026):** Auf der Live-Seite kommt ein neu ausgeliefertes Feature (z.B. "Training nachtragen"-Link) auch nach mehrfachem Reload beim Nutzer nicht an, obwohl der Server nachweislich (per `curl`) den korrekten, aktuellen Code ausliefert. Ursache vermutlich derselbe Service-Worker-Cache-Mechanismus wie beim lokalen Testen (siehe unten) — auf GitHub Pages tritt das also entgegen der ursprünglichen Annahme doch auf, wenn der Browser die Seite schon oft besucht hat. Noch nicht final gelöst; nächster Schritt: kompletter Website-Daten-Reset in Safari für die Live-Domain (Einstellungen → Erweitert/Datenschutz → Websitedaten verwalten → Eintrag für `juliusziegler88-stack.github.io` entfernen), oder prüfen ob die App als installierte Web-App/PWA (eigenes Fenster, nicht normaler Safari-Tab) läuft, was das Update-Verhalten des Service Workers zusätzlich verzögern kann.
 
 ## Workout-Picker Feature (07.07.2026)
 
@@ -48,4 +48,14 @@ Training-Tab zeigt jetzt einen tagesunabhängigen Workout-Picker (Ganzkörper A/
 
 Helles, warmes Theme statt des ursprünglichen Dark Mode — Creme-Hintergrund (`#FBF7F0`), Salbeigrün als Akzent (`#6B8F71`), warme Sekundärfarben (Senfgelb/Terrakotta/Rosé) für Makro-Ringe, Charts und Tages-Badges. Alle Farben hängen an den `:root`-Variablen in `app/styles.css`; `heute.js` (Ring-Farben) und `fortschritt.js` (Chart-Farben) tragen zusätzlich eigene Hex-Werte, die mit den Tokens synchron gehalten werden müssen. Details: `docs/specs/2026-07-07-warm-wellness-theme-design.md`, `docs/plans/2026-07-07-warm-wellness-theme.md`.
 
-**Achtung beim lokalen Testen mit `python3 -m http.server`:** Der Server sendet keine Cache-Control-Header, wodurch Safari hartnäckig alte JS-Dateien aus dem Festplatten-Cache ziehen kann, selbst nach Reload/neuem Tab (unabhängig vom Service-Worker-Cache). Im Zweifel per `curl` direkt gegen den Server prüfen, ob die Datei wirklich aktuell ist, bevor man dem Browser misstraut — auf der echten Live-Seite (GitHub Pages) tritt das nicht auf.
+**Achtung beim lokalen Testen mit `python3 -m http.server`:** Der Server sendet keine Cache-Control-Header, wodurch Safari hartnäckig alte JS-Dateien aus dem Festplatten-Cache ziehen kann, selbst nach Reload/neuem Tab (unabhängig vom Service-Worker-Cache). Im Zweifel per `curl` direkt gegen den Server prüfen, ob die Datei wirklich aktuell ist, bevor man dem Browser misstraut.
+
+**Korrektur (08.07.2026):** Der Service-Worker-Cache (`fitness-vX`, cache-first-Strategie in `app/sw.js`) kann genauso auf der Live-Seite (GitHub Pages) zuschlagen, nicht nur lokal — ein bereits besuchter Browser kann auch dort nach einem Deploy noch alten Code zeigen, selbst nach mehrfachem Reload. Verlässlichster Reset: Safari → Einstellungen → Websitedaten verwalten → Eintrag der Domain entfernen, dann neu laden.
+
+## Weekday-Leiste im Training-Tab (07.07.2026)
+
+Reihe von 7 Tages-Buttons (Mo–So der aktuellen Woche) oberhalb der Workout-Auswahl im Training-Tab. Klick zeigt den Rotationsstatus (Trainingstag A/B, Ausdauertag, Ruhetag) für diesen Tag als Badge — rein informativ, beeinflusst nicht, welches Workout startbar ist. `Rotation.getForDate(date)` (generalisiert aus `getToday()`) berechnet das für beliebige Tage. Details: `docs/specs/2026-07-07-weekday-strip-design.md`, `docs/plans/2026-07-07-weekday-strip.md`.
+
+## Training nachtragen (08.07.2026)
+
+Link "+ Training nachtragen" unter der Workout-Auswahl im Training-Tab öffnet ein eigenes, zustandsloses Formular (neues Modul `app/js/nachtrag.js`): Workout wählen → Datum frei wählbar (Standard: gestern) → bei Kraft-Workouts Gewicht/Sätze/Wdh pro Übung (ohne Timer, ohne Checkbox, ohne "Letztes Mal") → Speichern schreibt direkt in `Training_Log` mit dem gewählten statt dem heutigen Datum. Details: `docs/specs/2026-07-07-training-nachtragen-design.md`, `docs/plans/2026-07-07-training-nachtragen.md`.
