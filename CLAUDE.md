@@ -18,6 +18,7 @@ Persönliches Fitness-Dashboard als PWA — Training, Ernährung, Fortschritt, G
 - **Google Cloud Projekt:** "Fitness App v2" (ersetzt das ursprüngliche Projekt, siehe "Bekannte offene Punkte" unten — Anzeigename ≠ Projekt-ID, im Zweifel über den Projekt-Umschalter nach "fitness" suchen, nicht die ID raten)
 - **Google OAuth Client ID:** `839647146031-024ia48bl57ctekpbfeth9ku9m0dp7ct.apps.googleusercontent.com`
 - **Autorisierte JS-Origins für OAuth:** Live-URL + `http://localhost:8080`
+- **Cloudflare Worker (Login-Persistenz):** `https://fitness-app-auth.juliusziegler88.workers.dev` — hält den Google Client Secret, tauscht Refresh-Token gegen Access-Token. Code: `worker/index.js`. Deploy: `cd worker && npx wrangler deploy`.
 - **Wichtig:** Das Spreadsheet gehört dem Konto `julius.ziegler88@gmail.com` (nicht dem Mayakakao-Konto) — als Bearbeiter freigegeben. Falls ein neues Google-Konto je die App nutzen soll, muss das Sheet zuerst explizit mit dessen E-Mail geteilt werden ("Teilen"-Button im Spreadsheet), sonst gibt die API 403 PERMISSION_DENIED zurück, obwohl OAuth-Login und Scope korrekt sind.
 
 ## Lokales Testen
@@ -61,6 +62,23 @@ Helles, warmes Theme statt des ursprünglichen Dark Mode — Creme-Hintergrund (
 ## Weekday-Leiste im Training-Tab (07.07.2026)
 
 Reihe von 7 Tages-Buttons (Mo–So der aktuellen Woche) oberhalb der Workout-Auswahl im Training-Tab. Klick zeigt den Rotationsstatus (Trainingstag A/B, Ausdauertag, Ruhetag) für diesen Tag als Badge — rein informativ, beeinflusst nicht, welches Workout startbar ist. `Rotation.getForDate(date)` (generalisiert aus `getToday()`) berechnet das für beliebige Tage. Details: `docs/specs/2026-07-07-weekday-strip-design.md`, `docs/plans/2026-07-07-weekday-strip.md`.
+
+## Dauerhafter Login (09.07.2026)
+
+Bisher verlor die App den Login-Zustand bei jedem Reload (Token nur im JS-Speicher), und Safaris Cookie-Blockade (ITP) ließ den stillen Google-Reauth fast nie durchgehen — ständiges Neu-Einloggen. Fix: neuer Cloudflare Worker (`worker/index.js`, deployed als `fitness-app-auth` unter `https://fitness-app-auth.juliusziegler88.workers.dev`, Cloudflare-Account: julius eigener) hält den Google-Client-Secret und bietet `/exchange` (einmaliger Code → Tokens) sowie `/refresh` (Refresh-Token → neues Access-Token). `app/js/auth.js` nutzt jetzt `initCodeClient` (statt `initTokenClient`) für den einmaligen Login und speichert `access_token` + `refresh_token` + `expires_at` in `localStorage` (`fitness_auth`); `sheets.js` ruft vor jedem API-Call `Auth.ensureValidToken()` auf, was still über den Worker erneuert, bevor überhaupt ein Login-Popup infrage kommt.
+
+**Voraussetzung, die zusammen mit diesem Fix erledigt wurde:** Google-Cloud-Projekt "Fitness App v2" von "Testen" auf "In Produktion" umgestellt (OAuth-Zustimmungsbildschirm → Zielgruppe) — im Testen-Modus verfallen Refresh Tokens nach 7 Tagen, unabhängig vom Code. App bleibt unverifiziert (nur Sheets-Scope, ein Nutzer) — beim ersten Login nach dieser Umstellung erscheint einmalig eine "nicht verifiziert"-Warnung zum Wegklicken, keine Wiederholung danach.
+
+**Neuer, alter Clientschlüssel:** Der ursprüngliche Client Secret war nicht mehr abrufbar (Google zeigt Secrets nach der Erstellung nicht mehr im Klartext); es wurde ein zweiter Clientschlüssel über "Clientschlüssel hinzufügen" erstellt, der jetzt aktiv genutzt wird. Der alte (maskiert `****vu3k`) bleibt parallel bestehen, ungenutzt.
+
+**Deploy-Workflow für den Worker** (bei Codeänderungen in `worker/`):
+```bash
+cd worker
+npx wrangler deploy
+```
+Der `GOOGLE_CLIENT_SECRET` ist als Wrangler-Secret hinterlegt (`wrangler secret put GOOGLE_CLIENT_SECRET`), nicht im Repo. Details: `docs/specs/2026-07-09-persistent-login-design.md`, `docs/plans/2026-07-09-persistent-login.md`.
+
+**Bekannte Falle beim lokalen Testen mit `curl`:** Das alte macOS-System-`curl` (LibreSSL 3.3.6) kann keinen TLS-Handshake mit `*.workers.dev`-Adressen aufbauen (`SSL routines:ST_CONNECT:sslv3 alert handshake failure`), obwohl der Worker einwandfrei läuft. Über Safari/Browser oder mit einem moderneren curl/HTTP-Client prüfen, nicht dem System-`curl` misstrauen.
 
 ## Sonstige Aktivität (09.07.2026)
 
