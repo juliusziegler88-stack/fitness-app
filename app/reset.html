@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness App – Reset</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #FBF7F0; color: #333; text-align: center; }
+  </style>
+</head>
+<body>
+  <p id="status">Setze App zurück…</p>
+  <script>
+    (async () => {
+      const status = document.getElementById('status');
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        status.textContent = 'Fertig — App wird neu geladen…';
+      } catch (e) {
+        status.textContent = 'Fertig — App wird neu geladen…';
+      }
+      location.href = './';
+    })();
+  </script>
+</body>
+</html>
