@@ -16,7 +16,7 @@ window.Training = {
       <div id="day-nav"></div>
       <div class="section-title">Workout wählen</div>
       <div id="workout-picker">
-        ${Data.workouts.map(w => `
+        ${Data.workouts.filter(w => !w.nurNachtragen).map(w => `
           <div class="card" style="cursor:pointer" data-workout="${w.id}">
             <div style="font-weight:600;font-size:16px">${w.name}</div>
             <div style="color:var(--text-muted);font-size:13px;margin-top:4px">${w.typ === 'kraft' ? 'Krafttraining' : 'Cardio'}</div>
@@ -100,9 +100,10 @@ window.Training = {
       const rows = await Sheets.getAll('Training_Log');
       const tage = [...new Set(rows.map(r => r[0]))].reverse().slice(0, 5);
       el.innerHTML = tage.map(d => {
-        const einheit = rows.find(r => r[0] === d)?.[1] || '';
+        const row = rows.find(r => r[0] === d);
+        const einheit = row?.[1] || '';
         const workout = Data.workouts.find(w => w.id === einheit);
-        const label = workout ? workout.name : einheit;
+        const label = einheit === 'sonstiges' ? (row?.[2] || workout.name) : (workout ? workout.name : einheit);
         return `
           <div class="card" style="padding:12px;margin-bottom:8px">
             <span style="font-weight:600">${d}</span>
