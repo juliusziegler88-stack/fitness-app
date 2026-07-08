@@ -16,10 +16,10 @@ window.Training = {
       <div id="day-nav"></div>
       <div class="section-title">Workout wählen</div>
       <div id="workout-picker">
-        ${Data.workouts.filter(w => !w.nurNachtragen).map(w => `
+        ${Data.workouts.map(w => `
           <div class="card" style="cursor:pointer" data-workout="${w.id}">
             <div style="font-weight:600;font-size:16px">${w.name}</div>
-            <div style="color:var(--text-muted);font-size:13px;margin-top:4px">${w.typ === 'kraft' ? 'Krafttraining' : 'Cardio'}</div>
+            <div style="color:var(--text-muted);font-size:13px;margin-top:4px">${w.typ === 'kraft' ? 'Krafttraining' : w.typ === 'cardio' ? 'Cardio' : 'Beliebige Sportart'}</div>
           </div>
         `).join('')}
       </div>
@@ -33,7 +33,12 @@ window.Training = {
     document.querySelectorAll('#workout-picker [data-workout]').forEach(card => {
       card.addEventListener('click', () => {
         const workout = Data.workouts.find(w => w.id === card.dataset.workout);
-        WorkoutSession.render(workout);
+        if (workout.typ === 'sonstiges') {
+          const today = new Date().toISOString().slice(0, 10);
+          Nachtrag.renderForm(workout, today, () => Training.render());
+        } else {
+          WorkoutSession.render(workout);
+        }
       });
     });
 

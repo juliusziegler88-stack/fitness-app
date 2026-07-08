@@ -248,5 +248,5 @@ window.Data.workouts = [
   { id: 'A', name: 'Ganzkörper A', typ: 'kraft', plan: window.Data.plaene.A },
   { id: 'B', name: 'Ganzkörper B', typ: 'kraft', plan: window.Data.plaene.B },
   { id: 'running', name: 'Running', typ: 'cardio', text: 'Mindestens 30–45 min kontinuierliche Ausdauer: Laufen, Fahrrad, Rudergerät oder Schwimmen. Intensität: moderate Herzfrequenz (Zone 2), du kannst noch sprechen.' },
-  { id: 'sonstiges', name: 'Sonstige Aktivität', typ: 'sonstiges', nurNachtragen: true }
+  { id: 'sonstiges', name: 'Sonstige Aktivität', typ: 'sonstiges' }
 ];

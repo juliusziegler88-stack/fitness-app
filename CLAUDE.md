@@ -62,6 +62,14 @@ Helles, warmes Theme statt des ursprünglichen Dark Mode — Creme-Hintergrund (
 
 Reihe von 7 Tages-Buttons (Mo–So der aktuellen Woche) oberhalb der Workout-Auswahl im Training-Tab. Klick zeigt den Rotationsstatus (Trainingstag A/B, Ausdauertag, Ruhetag) für diesen Tag als Badge — rein informativ, beeinflusst nicht, welches Workout startbar ist. `Rotation.getForDate(date)` (generalisiert aus `getToday()`) berechnet das für beliebige Tage. Details: `docs/specs/2026-07-07-weekday-strip-design.md`, `docs/plans/2026-07-07-weekday-strip.md`.
 
+## Sonstige Aktivität (09.07.2026)
+
+Neue Workout-Kategorie `typ: 'sonstiges'` (z.B. "Fußball") ohne Timer/Live-Session — Sportart wird frei eingetippt und landet in der bei Cardio ungenutzten "Übung"-Spalte von `Training_Log`. Erreichbar von zwei Stellen, beide nutzen dasselbe Formular `Nachtrag.renderForm(workout, defaultDate, onBack)`:
+- **"Workout wählen"** (training.js, direkt): Standard-Datum heute, "Zurück" führt zurück zu `Training.render()`.
+- **"Training nachtragen"** (nachtrag.js): Standard-Datum gestern, "Zurück" führt zu `Nachtrag.render()`.
+
+`_renderHistory()` in training.js zeigt bei `sonstiges`-Einträgen die eingetippte Sportart statt des generischen Kategorienamens.
+
 ## Training nachtragen (08.07.2026)
 
 Link "+ Training nachtragen" unter der Workout-Auswahl im Training-Tab öffnet ein eigenes, zustandsloses Formular (neues Modul `app/js/nachtrag.js`): Workout wählen → Datum frei wählbar (Standard: gestern) → bei Kraft-Workouts Gewicht/Sätze/Wdh pro Übung (ohne Timer, ohne Checkbox, ohne "Letztes Mal") → Speichern schreibt direkt in `Training_Log` mit dem gewählten statt dem heutigen Datum. Details: `docs/specs/2026-07-07-training-nachtragen-design.md`, `docs/plans/2026-07-07-training-nachtragen.md`.

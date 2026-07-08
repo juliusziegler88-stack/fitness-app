@@ -24,12 +24,13 @@ window.Nachtrag = {
     document.getElementById('btn-nachtrag-back').addEventListener('click', () => Training.render());
   },
 
-  renderForm(workout) {
+  renderForm(workout, defaultDate, onBack) {
     const el = document.getElementById('tab-training');
     const isKraft = workout.typ === 'kraft';
     const isSonstiges = workout.typ === 'sonstiges';
     const yesterday = new Date(Date.now() - 86400000);
-    const defaultDate = yesterday.toISOString().slice(0, 10);
+    defaultDate = defaultDate || yesterday.toISOString().slice(0, 10);
+    onBack = onBack || (() => this.render());
 
     const alleUebungen = isKraft
       ? workout.plan.flatMap(ss => ss.uebungen.filter(u => !u.includes('Conditioning') && u !== 'Core'))
@@ -62,7 +63,7 @@ window.Nachtrag = {
     `;
 
     document.getElementById('btn-nachtrag-save').addEventListener('click', () => this._save(workout, alleUebungen));
-    document.getElementById('btn-nachtrag-cancel').addEventListener('click', () => this.render());
+    document.getElementById('btn-nachtrag-cancel').addEventListener('click', onBack);
   },
 
   _renderExerciseRow(uebung) {
