@@ -1,3 +1,6 @@
 name = "fitness-app-auth"
 main = "index.js"
-compatibility_date = "2026-07-09"
+compatibility_date = "2025-01-01"
+
+[vars]
+GOOGLE_CLIENT_ID = "839647146031-024ia48bl57ctekpbfeth9ku9m0dp7ct.apps.googleusercontent.com"
