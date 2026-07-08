@@ -3,7 +3,7 @@ window.Sheets = {
   PENDING_KEY: 'fitness_pending_rows',
 
   async _req(path, method = 'GET', body = null) {
-    if (!Auth.isSignedIn()) await Auth.signIn();
+    await Auth.ensureValidToken();
     const opts = {
       method,
       headers: {
