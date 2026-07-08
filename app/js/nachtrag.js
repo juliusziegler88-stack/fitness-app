@@ -7,7 +7,7 @@ window.Nachtrag = {
         ${Data.workouts.map(w => `
           <div class="card" style="cursor:pointer" data-workout="${w.id}">
             <div style="font-weight:600;font-size:16px">${w.name}</div>
-            <div style="color:var(--text-muted);font-size:13px;margin-top:4px">${w.typ === 'kraft' ? 'Krafttraining' : 'Cardio'}</div>
+            <div style="color:var(--text-muted);font-size:13px;margin-top:4px">${w.typ === 'kraft' ? 'Krafttraining' : w.typ === 'cardio' ? 'Cardio' : 'Beliebige Sportart'}</div>
           </div>
         `).join('')}
       </div>
@@ -27,6 +27,7 @@ window.Nachtrag = {
   renderForm(workout) {
     const el = document.getElementById('tab-training');
     const isKraft = workout.typ === 'kraft';
+    const isSonstiges = workout.typ === 'sonstiges';
     const yesterday = new Date(Date.now() - 86400000);
     const defaultDate = yesterday.toISOString().slice(0, 10);
 
@@ -50,7 +51,10 @@ window.Nachtrag = {
                 </div>
               `;
             }).join('')
-          : `<p style="color:var(--text-muted);line-height:1.6">${workout.text}</p>`
+          : isSonstiges
+            ? `<div class="log-input-label">Sportart</div>
+               <input type="text" id="nachtrag-sportart" placeholder="z.B. Fußball, Tennis, Schwimmen...">`
+            : `<p style="color:var(--text-muted);line-height:1.6">${workout.text}</p>`
         }
       </div>
       <button class="btn btn-primary" id="btn-nachtrag-save">✓ Speichern</button>
@@ -88,6 +92,12 @@ window.Nachtrag = {
     const [y, m, d] = document.getElementById('nachtrag-datum').value.split('-').map(Number);
     const datum = new Date(y, m - 1, d).toLocaleDateString('de-DE');
 
+    let sportart = '';
+    if (workout.typ === 'sonstiges') {
+      sportart = document.getElementById('nachtrag-sportart').value.trim();
+      if (!sportart) { App.showToast('Bitte Sportart eingeben'); return; }
+    }
+
     const rows = workout.typ === 'kraft'
       ? alleUebungen.map(u => {
           const id = u.replace(/\s/g, '_');
@@ -96,7 +106,7 @@ window.Nachtrag = {
           const reps = document.getElementById(`nachtrag-reps_${id}`)?.value || '0';
           return [datum, workout.id, u, kg, saetze, reps];
         })
-      : [[datum, workout.id, '', '', '', '']];
+      : [[datum, workout.id, sportart, '', '', '']];
 
     let offline = false;
     for (const row of rows) {
