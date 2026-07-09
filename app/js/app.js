@@ -22,6 +22,9 @@ window.App = {
   },
 
   init() {
+    // TEMPORÄR zum Debuggen des Schritte-Kurzbefehl-Bounce — wieder entfernen, sobald geklärt.
+    if (window.location.search) alert('Debug URL-Parameter: ' + window.location.search);
+
     // Schrittzahl vom Kurzbefehl übernehmen (falls gerade zurückgesprungen), sonst
     // auf dem iPhone den nächsten Bounce zu Shortcuts auslösen.
     Schritte.syncOnStart();
