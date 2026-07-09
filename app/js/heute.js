@@ -1,11 +1,15 @@
 window.Heute = {
   today: null,
   ziel: null,
+  schritte: null,
+  gewicht: 75, // Platzhalter, bis ein Wert aus dem Koerper-Sheet geladen ist
   gegessen: { kcal: 0, protein: 0, carbs: 0, fett: 0 },
 
   async render() {
     this.today = Rotation.getToday();
-    this.ziel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
+    const basisZiel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
+    this.schritte = Schritte.getToday();
+    this.ziel = this._buildZiel(basisZiel);
 
     const mahlzeiten = ['Frühstück', 'Mittagessen', 'After Workout', 'Abendessen'];
     // Ausdauer/Ruhetag: kein After Workout
@@ -18,6 +22,8 @@ window.Heute = {
     document.getElementById('tab-heute').innerHTML = `
       <h1 style="font-size:20px;font-weight:700;margin-bottom:4px">${datumStr}</h1>
       <span class="day-badge ${this.today.badgeClass}">${this.today.label}</span>
+
+      <div class="card" id="schritte-card"></div>
 
       <div class="card">
         <div class="macro-rings" id="macro-rings"></div>
@@ -42,10 +48,32 @@ window.Heute = {
       </button>
     `;
 
+    this._renderSchritte();
     this._renderRings();
     this._renderBars();
     this._bindEvents(anzeigeM);
     await this._loadGegessen();
+    await this._loadGewicht(basisZiel);
+  },
+
+  _buildZiel(basisZiel) {
+    const bonus = Schritte.kcalBonus(this.schritte, this.gewicht);
+    return { ...basisZiel, kcal: basisZiel.kcal + bonus };
+  },
+
+  _renderSchritte() {
+    const el = document.getElementById('schritte-card');
+    if (!el) return;
+    const s = this.schritte;
+    const pct = s === null ? 0 : Math.min(100, Math.round((s / Schritte.ZIEL) * 100));
+    el.innerHTML = `
+      <div class="section-title">Schritte heute</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px">
+        <span style="font-size:28px;font-weight:700">${s === null ? '–' : s.toLocaleString('de-DE')}</span>
+        <span style="font-size:13px;color:var(--text-muted)">/ ${Schritte.ZIEL.toLocaleString('de-DE')}</span>
+      </div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:${pct}%"></div></div>
+    `;
   },
 
   _renderRings() {
@@ -139,6 +167,21 @@ window.Heute = {
       this._renderBars();
     } catch (e) {
       console.warn('Makros konnten nicht geladen werden:', e);
+    }
+  },
+
+  async _loadGewicht(basisZiel) {
+    if (!Auth.isSignedIn()) return;
+    try {
+      const rows = await Sheets.getAll('Koerper');
+      const letzte = [...rows].reverse().find(r => r[1]);
+      if (!letzte) return;
+      this.gewicht = parseFloat(letzte[1]) || this.gewicht;
+      this.ziel = this._buildZiel(basisZiel);
+      this._renderRings();
+      this._renderBars();
+    } catch (e) {
+      console.warn('Gewicht konnte nicht geladen werden:', e);
     }
   }
 };

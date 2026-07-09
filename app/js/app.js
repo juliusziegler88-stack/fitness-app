@@ -22,6 +22,10 @@ window.App = {
   },
 
   init() {
+    // Schrittzahl vom Kurzbefehl übernehmen (falls gerade zurückgesprungen), sonst
+    // auf dem iPhone den nächsten Bounce zu Shortcuts auslösen.
+    Schritte.syncOnStart();
+
     // Service Worker registrieren, Update-Check aktiv erzwingen statt auf Safaris
     // eigenen (unzuverlässigen) Hintergrund-Zeitplan zu warten. Sobald eine neue
     // Version die Kontrolle übernimmt, Seite automatisch neu laden.
