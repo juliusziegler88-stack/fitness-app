@@ -7,9 +7,9 @@ window.Heute = {
 
   async render() {
     this.today = Rotation.getToday();
-    const basisZiel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
+    this.basisZiel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
     this.schritte = Schritte.getToday();
-    this.ziel = this._buildZiel(basisZiel);
+    this.ziel = this._buildZiel();
 
     const mahlzeiten = ['Frühstück', 'Mittagessen', 'After Workout', 'Abendessen'];
     // Ausdauer/Ruhetag: kein After Workout
@@ -53,12 +53,12 @@ window.Heute = {
     this._renderBars();
     this._bindEvents(anzeigeM);
     await this._loadGegessen();
-    await this._loadGewicht(basisZiel);
+    await this._loadGewicht();
   },
 
-  _buildZiel(basisZiel) {
+  _buildZiel() {
     const bonus = Schritte.kcalBonus(this.schritte, this.gewicht);
-    return { ...basisZiel, kcal: basisZiel.kcal + bonus };
+    return { ...this.basisZiel, kcal: this.basisZiel.kcal + bonus };
   },
 
   _renderSchritte() {
@@ -73,7 +73,21 @@ window.Heute = {
         <span style="font-size:13px;color:var(--text-muted)">/ ${Schritte.ZIEL.toLocaleString('de-DE')}</span>
       </div>
       <div class="macro-bar-track"><div class="macro-bar-fill" style="width:${pct}%"></div></div>
+      <button class="btn btn-ghost" id="btn-schritte-update" style="margin-top:10px;width:100%">🔄 Aktualisieren</button>
     `;
+    document.getElementById('btn-schritte-update')?.addEventListener('click', async () => {
+      const r = await Schritte.tryClipboard();
+      if (r.ok) {
+        this.schritte = Schritte.getToday();
+        this.ziel = this._buildZiel();
+        this._renderSchritte();
+        this._renderRings();
+        this._renderBars();
+        App.showToast(`Schritte aktualisiert: ${this.schritte}`);
+      } else {
+        App.showToast('Zwischenablage nicht lesbar — Kurzbefehl gerade ausgeführt?');
+      }
+    });
   },
 
   _renderRings() {
@@ -170,14 +184,14 @@ window.Heute = {
     }
   },
 
-  async _loadGewicht(basisZiel) {
+  async _loadGewicht() {
     if (!Auth.isSignedIn()) return;
     try {
       const rows = await Sheets.getAll('Koerper');
       const letzte = [...rows].reverse().find(r => r[1]);
       if (!letzte) return;
       this.gewicht = parseFloat(letzte[1]) || this.gewicht;
-      this.ziel = this._buildZiel(basisZiel);
+      this.ziel = this._buildZiel();
       this._renderRings();
       this._renderBars();
     } catch (e) {

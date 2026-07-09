@@ -52,15 +52,13 @@ window.App = {
     // Wartende Einträge automatisch nachsenden, sobald wieder Netz da ist
     window.addEventListener('online', () => Sheets.flushPending());
 
-    // Beim Zurückkommen aus dem Hintergrund (z.B. nach dem Shortcuts-Bounce) die
-    // Zwischenablage auf eine neue Schrittzahl prüfen — nötig, weil iOS die Seite
-    // dabei nicht neu lädt (kein DOMContentLoaded) und x-success sich als unzuverlässig
-    // herausgestellt hat.
+    // Beim Zurückkommen aus dem Hintergrund (z.B. nach dem Shortcuts-Bounce) versuchen,
+    // die Zwischenablage still zu lesen — klappt nur, falls Safari den Zugriff aus einem
+    // früheren manuellen "Aktualisieren"-Tap noch gewährt hat, sonst schlägt es lautlos
+    // fehl und der Nutzer nutzt den Button auf der Heute-Seite.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState !== 'visible') return;
       Schritte.tryClipboard().then(r => {
-        // TEMPORÄR zum Debuggen — wieder entfernen, sobald geklärt.
-        alert('Debug Zwischenablage: ' + JSON.stringify(r));
         if (r.ok && this.currentTab === 'heute') window.Heute?.render();
       });
     });
