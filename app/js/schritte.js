@@ -1,7 +1,7 @@
 window.Schritte = {
   STORAGE_KEY: 'fitness_schritte',
   // Muss exakt so heißen wie der Kurzbefehl in der Shortcuts-App auf dem iPhone.
-  SHORTCUT_NAME: 'Statistik berechnen',
+  SHORTCUT_NAME: 'SchritteApp',
   BASELINE: 7000,
   ZIEL: 10000,
 
