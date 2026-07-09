@@ -1,4 +1,4 @@
-const CACHE = 'fitness-v20';
+const CACHE = 'fitness-v21';
 const ASSETS = [
   './', 'index.html', 'styles.css', 'manifest.json',
   'js/config.js', 'js/data.js', 'js/rotation.js', 'js/schritte.js',

@@ -77,6 +77,7 @@ window.Heute = {
     `;
     document.getElementById('btn-schritte-update')?.addEventListener('click', async () => {
       const r = await Schritte.tryClipboard();
+      alert('Debug Zwischenablage: ' + JSON.stringify(r)); // TEMPORÄR
       if (r.ok) {
         this.schritte = Schritte.getToday();
         this.ziel = this._buildZiel();
