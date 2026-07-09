@@ -92,13 +92,34 @@ Neue Workout-Kategorie `typ: 'sonstiges'` (z.B. "Fußball") ohne Timer/Live-Sess
 
 Link "+ Training nachtragen" unter der Workout-Auswahl im Training-Tab öffnet ein eigenes, zustandsloses Formular (neues Modul `app/js/nachtrag.js`): Workout wählen → Datum frei wählbar (Standard: gestern) → bei Kraft-Workouts Gewicht/Sätze/Wdh pro Übung (ohne Timer, ohne Checkbox, ohne "Letztes Mal") → Speichern schreibt direkt in `Training_Log` mit dem gewählten statt dem heutigen Datum. Details: `docs/specs/2026-07-07-training-nachtragen-design.md`, `docs/plans/2026-07-07-training-nachtragen.md`.
 
-## Status (Stand: 09.07.2026, Ende Session)
+## Schrittzähler aus Apple Health (09.07.2026, läuft noch — siehe "Status" unten)
 
-Diese Session behoben/fertiggestellt:
-- Live-Update-Problem des Service Workers vollständig gelöst (dreischichtiger Fix, siehe oben) — inkl. `app/reset.html` als Notfall-Escape-Hatch für künftig feststeckende Geräte.
-- Neue Kategorie "Sonstige Aktivität" (Training nachtragen + direkt im Workout-Picker) live und getestet.
-- Dauerhafter Login über Cloudflare-Worker-Refresh-Flow gebaut, deployed **und von Julius auf dem iPhone als funktionierend bestätigt** (kein Login-Popup mehr nach Safari-Neustart).
+Neues Modul `app/js/schritte.js`. Da eine Web-PWA keinen direkten HealthKit-Zugriff hat, läuft das über einen **Kurzbefehl-Bounce**: Beim App-Start (nur wenn als installierte iPhone-App, `navigator.standalone`) ruft `Schritte.syncOnStart()` per `shortcuts://run-shortcut?name=...` einen Kurzbefehl auf, der die heutige Schrittzahl aus Health liest.
 
-**Für die nächste Session offen:**
-- Feature-Wunsch: Bodyweight-Übungen (z.B. Klimmzüge) sollten kein Gewicht-Eingabefeld zeigen, nur Wiederholungen (siehe "Bekannte offene Punkte" oben) — noch nicht angegangen.
-- Sonst nichts Bekanntes offen; Julius sagte "alles andere machen wir morgen weiter" ohne konkretes neues Thema zu nennen — beim nächsten Mal nachfragen, was ansteht.
+**Name des Kurzbefehls:** `SchritteApp` (Konstante `Schritte.SHORTCUT_NAME` in `schritte.js`). Ursprünglich hieß er anders und wurde zweimal neu angelegt — Details dazu und zur ganzen Fehlersuche siehe Verlauf unten.
+
+**Aktionen im Kurzbefehl (Stand jetzt):** "Health-Messungen suchen mit" (Typ Schritte, Startdatum ist heute) → "Statistik berechnen" (Summe) → "In Zwischenablage kopieren" (Eingabe: die Summe). Dazu kommt noch eine Alt-Aktion "Stoppen und Text ausgeben" aus einer früheren Testphase, die nicht mehr gebraucht wird, aber nicht stört — kann bei Gelegenheit aufgeräumt werden.
+
+**kcal-Ziel-Anpassung** (`heute.js`, `_buildZiel()`): `kcal_ziel = Basis-Ziel(Tagestyp) + max(0, Schritte − 7000) × Gewicht(kg) × 0.0005`. Baseline 7.000 Schritte gilt als bereits in den bestehenden 2350/2300/2100-kcal-Zielen eingepreist. Gewicht wird aus dem zuletzt geloggten Wert im `Koerper`-Sheet geladen (`_loadGewicht()`), Platzhalter 75 kg bis ein Wert vorliegt. `this.basisZiel` wird in `render()` als Instanzfeld gehalten, damit `_buildZiel()` später (z.B. nach einem Update-Button-Klick) ohne erneuten Parameter neu rechnen kann. Neue Karte oben auf der Heute-Seite zeigt Schrittzahl + Fortschrittsbalken zu einem Ziel von 10.000 + einen "🔄 Aktualisieren"-Button.
+
+### Fehlersuche — was schon ausprobiert und verworfen wurde
+
+1. **`x-success`-Rücksprung (`shortcuts://x-callback-url/run-shortcut?...&x-success=...`):** Auf Julius' iPhone **nachweislich komplett kaputt** — bestätigt durch einen isolierten Test direkt in der Notizen-App (Link ohne unsere App dazwischen): Sobald `x-success` im Link vorkommt, bricht die Kurzbefehl-Ausführung selbst mit "Beim Ausführen ... ist ein Problem aufgetreten" ab, auch bei einem trivialen Ein-Aktionen-Testkurzbefehl ganz ohne Health-Zugriff. Ohne `x-success` läuft derselbe Kurzbefehl fehlerfrei. **Fazit: `x-success` in `schritte.js` nicht wiederverwenden, auch nicht für andere Features.**
+2. **Deshalb umgestellt auf Zwischenablage:** Kurzbefehl kopiert die Schrittzahl rein (`In Zwischenablage kopieren`), `Schritte.tryClipboard()` liest sie über `navigator.clipboard.readText()`.
+3. **Automatisches Lesen der Zwischenablage beim Zurückkommen (`visibilitychange`-Listener in `app.js`) schlägt zuverlässig fehl** mit `NotAllowedError` — Safari erlaubt `clipboard.readText()` nur direkt nach einem echten Nutzer-Tap, nicht aus einem automatischen Event heraus. Deshalb zusätzlich ein manueller **"🔄 Aktualisieren"-Button** auf der Schritte-Karte (`heute.js`), der beim Klick liest (der Tap selbst ist die nötige Nutzer-Geste). Der `visibilitychange`-Listener bleibt als stiller Bonusversuch bestehen (könnte nach einer einmaligen Erlaubnis auch automatisch klappen), Hauptmechanismus ist aber der Button.
+4. **Verwirrung um Kurzbefehl-Umbenennung:** Ein zusammengeführter Kurzbefehl ließ sich partout nicht umbenennen (Name sprang nach "Fertig" immer auf den Auto-Titel zurück, vermutlich iOS-Anzeigebug) und scheiterte danach *nur* beim externen Aufruf über die App (manueller Play-Button-Test lief immer fehlerfrei) — Ursache vermutlich verwirrte interne Kennung durch das Zusammenführen zweier ursprünglich getrennter Kurzbefehle. Lösung: kompletter Neuaufbau als frischer Kurzbefehl `SchritteApp`, `SHORTCUT_NAME` entsprechend im Code mitgeführt.
+5. **Debug-Vorgehen, das sich bewährt hat:** Bei jedem "geht nicht" zuerst mit einem minimalen Test-Kurzbefehl (nur `Text: 9999`, ohne Health) isoliert testen, ob das Problem am Health-Zugriff liegt oder allgemein an der Aufruf-Mechanik — und Links testweise direkt in der Notizen-App antippen, um Code als Fehlerquelle auszuschließen.
+
+**Aktuell temporär im Code:** In `heute.js` (`_renderSchritte()`, Button-Handler) steht noch `alert('Debug Zwischenablage: ' + JSON.stringify(r));` — zeigt bei jedem Button-Klick den rohen Erfolg/Fehler der Zwischenablage-Lesung. **Muss entfernt werden**, sobald der Mechanismus bestätigt zuverlässig läuft.
+
+## Status (Stand: 09.07.2026, Session unterbrochen wegen GitHub-Ausfall)
+
+**Zuletzt gepushter Commit:** `81bab50` ("Debug: Grund des Zwischenablage-Fehlschlags beim Aktualisieren-Button anzeigen"), Cache-Version `fitness-v21`.
+
+**Blocker beim Sessionende:** GitHub selbst hatte einen Ausfall (laut githubstatus.com eskalierend von "Minor Service Outage" zu "Partial System Outage"), wodurch das Pages-Deployment für diesen Commit in der Warteschlange feststeckte und trotz mehrfachen Nachprüfens (auch nach 15+ Minuten) nicht live ging. **Das ist kein Code-Problem** — beim nächsten Mal zuerst prüfen, ob `https://juliusziegler88-stack.github.io/fitness-app/app/js/heute.js` bereits den String `"Debug Zwischenablage"` enthält (`curl` + `grep`), und ob githubstatus.com wieder "All Systems Operational" zeigt.
+
+**Nächste Schritte, sobald das Deployment durch ist:**
+1. Julius testet: App öffnen (bounct automatisch zu Shortcuts und zurück, kein Fehler mehr erwartet) → auf der Heute-Seite den "🔄 Aktualisieren"-Button antippen → Debug-Alert zeigt entweder `{"ok":true,"text":"..."}` (Erfolg, Schrittzahl sollte dann angezeigt werden) oder `{"ok":false,...}` mit Fehlergrund.
+2. Falls weiterhin `NotAllowedError` trotz direktem Button-Tap: eventuelle iOS-Einstellung zu "Einfügen aus anderen Apps zulassen" prüfen, oder ob der Kurzbefehl tatsächlich VOR dem Tap fertig gelaufen ist (Zwischenablage könnte noch leer/alt sein, wenn zu schnell getippt wird).
+3. Falls Erfolg: Debug-Alert aus `heute.js` entfernen, `CACHE`-Version in `sw.js` hochzählen, committen/pushen.
+4. Danach: Feature-Wunsch aus "Bekannte offene Punkte" oben (Bodyweight-Übungen ohne Gewichtsfeld) ist weiterhin offen und noch nicht angegangen.
