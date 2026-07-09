@@ -42,7 +42,7 @@ window.Schritte = {
   requestUpdate() {
     const successUrl = window.location.origin + window.location.pathname;
     window.location.href =
-      `shortcuts://x-callback-url/run-shortcut?name=${encodeURIComponent(this.SHORTCUT_NAME)}` +
+      `shortcuts://run-shortcut?name=${encodeURIComponent(this.SHORTCUT_NAME)}` +
       `&x-success=${encodeURIComponent(successUrl)}`;
   },
 
