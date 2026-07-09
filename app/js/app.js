@@ -22,9 +22,6 @@ window.App = {
   },
 
   init() {
-    // TEMPORÄR zum Debuggen des Schritte-Kurzbefehl-Bounce — wieder entfernen, sobald geklärt.
-    if (window.location.search) alert('Debug URL-Parameter: ' + window.location.search);
-
     // Schrittzahl vom Kurzbefehl übernehmen (falls gerade zurückgesprungen), sonst
     // auf dem iPhone den nächsten Bounce zu Shortcuts auslösen.
     Schritte.syncOnStart();
@@ -55,14 +52,17 @@ window.App = {
     // Wartende Einträge automatisch nachsenden, sobald wieder Netz da ist
     window.addEventListener('online', () => Sheets.flushPending());
 
-    // TEMPORÄR zum Debuggen: Beim Zurückkommen aus dem Hintergrund (z.B. nach dem
-    // Shortcuts-Bounce) prüfen, ob die URL inzwischen einen Rückgabewert enthält —
-    // nötig, weil iOS die Seite dabei offenbar nicht neu lädt (kein DOMContentLoaded).
+    // Beim Zurückkommen aus dem Hintergrund (z.B. nach dem Shortcuts-Bounce) die
+    // Zwischenablage auf eine neue Schrittzahl prüfen — nötig, weil iOS die Seite
+    // dabei nicht neu lädt (kein DOMContentLoaded) und x-success sich als unzuverlässig
+    // herausgestellt hat.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState !== 'visible') return;
-      alert('Debug (sichtbar geworden): ' + window.location.href);
-      const kamGeradeZurueck = Schritte.captureFromUrl();
-      if (kamGeradeZurueck && this.currentTab === 'heute') window.Heute?.render();
+      Schritte.tryClipboard().then(r => {
+        // TEMPORÄR zum Debuggen — wieder entfernen, sobald geklärt.
+        alert('Debug Zwischenablage: ' + JSON.stringify(r));
+        if (r.ok && this.currentTab === 'heute') window.Heute?.render();
+      });
     });
 
     // Auto-Login versuchen, dann initialer Tab

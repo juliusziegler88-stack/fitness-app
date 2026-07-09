@@ -37,13 +37,26 @@ window.Schritte = {
     }
   },
 
-  // Springt zur Shortcuts-App, die die aktuelle Schrittzahl aus Health liest und per
-  // x-callback-url zurück in die App springt (?result=<Schrittzahl> wird von iOS angehängt).
+  // Springt zur Shortcuts-App, die die aktuelle Schrittzahl aus Health liest und in die
+  // Zwischenablage kopiert (x-success ist auf iOS unzuverlässig, siehe tryClipboard()).
   requestUpdate() {
-    const successUrl = window.location.origin + window.location.pathname;
-    window.location.href =
-      `shortcuts://run-shortcut?name=${encodeURIComponent(this.SHORTCUT_NAME)}` +
-      `&x-success=${encodeURIComponent(successUrl)}`;
+    window.location.href = `shortcuts://run-shortcut?name=${encodeURIComponent(this.SHORTCUT_NAME)}`;
+  },
+
+  // Versucht die Schrittzahl aus der Zwischenablage zu lesen (dort legt sie der Kurzbefehl ab).
+  // Gibt ein Debug-Objekt zurück: { ok, text } bei Erfolg/Fehlschlag, { ok:false, error } bei Exception.
+  async tryClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      const n = parseInt(text, 10);
+      if (!isNaN(n)) {
+        this._save(n);
+        return { ok: true, text };
+      }
+      return { ok: false, text };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
   },
 
   // Beim App-Start aufrufen: übernimmt einen Rückgabewert, falls die App gerade aus dem
