@@ -55,6 +55,16 @@ window.App = {
     // Wartende Einträge automatisch nachsenden, sobald wieder Netz da ist
     window.addEventListener('online', () => Sheets.flushPending());
 
+    // TEMPORÄR zum Debuggen: Beim Zurückkommen aus dem Hintergrund (z.B. nach dem
+    // Shortcuts-Bounce) prüfen, ob die URL inzwischen einen Rückgabewert enthält —
+    // nötig, weil iOS die Seite dabei offenbar nicht neu lädt (kein DOMContentLoaded).
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') return;
+      alert('Debug (sichtbar geworden): ' + window.location.href);
+      const kamGeradeZurueck = Schritte.captureFromUrl();
+      if (kamGeradeZurueck && this.currentTab === 'heute') window.Heute?.render();
+    });
+
     // Auto-Login versuchen, dann initialer Tab
     Auth.autoSignIn().finally(() => {
       Sheets.flushPending();
