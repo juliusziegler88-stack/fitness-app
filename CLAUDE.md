@@ -47,6 +47,22 @@ Push auf `main` löst automatisch das GitHub-Pages-Deployment aus (kein manuelle
   - Cache-Version weiterhin bei jeder JS-Änderung hochzählen (aktueller Stand siehe `app/sw.js`) — bleibt relevant für den Offline-Fallback (`caches.match` bei fehlgeschlagenem Fetch).
   - **`app/reset.html`:** Alternative zum manuellen Websitedaten-Löschen in den iPhone-Einstellungen, falls ein Gerät trotz obiger Fixes nochmal feststeckt. Funktioniert, weil eine komplett neue, im alten Cache nie vorhandene Datei vom alten Service Worker zwangsläufig aus dem echten Netzwerk geladen wird (Cache-Miss → Fallback auf `fetch`). Die Seite meldet den aktiven Service Worker ab, löscht alle Caches und leitet zurück zur App. Aufruf: `https://juliusziegler88-stack.github.io/fitness-app/app/reset.html`.
 
+## Trainingsplan-Umbau: 4er-Split "Hybrid Athlete" (10.07.2026)
+
+Alte A/B-Ganzkörper-Rotation komplett ersetzt durch festen Upper/Lower-x2-Split, weil Julius bei den A/B-Supersätzen weniger Muskelkater/Reiz spürte (kardiovaskuläre Ermüdung durch kurze Pausen bei Push+Pull direkt hintereinander) und Richtung "Hybrid Athlete" (Kraft + Laufen, kein Bodybuilding) wollte. Auf Recherche-Basis (Interferenz-Effekt bei getrenntem Kraft/Lauf-Tag vernachlässigbar, 2x/Woche-Frequenz pro Muskelgruppe optimal) neu aufgebaut.
+
+**Fester Wochenplan** (`rotation.js`, keine Wochenalternation mehr):
+- Mo: Unterkörper schwer (5–8 Wdh) — Di: Oberkörper schwer (5–8 Wdh) — Mi: Ruhetag
+- Do: Unterkörper leicht (10–15 Wdh) — Fr: Oberkörper leicht (10–15 Wdh) — Sa: Laufen (Zone 2) — So: Ruhetag
+
+**Datenmodell (`data.js`):** `plaene` hat jetzt 4 Keys (`unterkoerperSchwer`, `oberkoerperSchwer`, `unterkoerperLeicht`, `oberkoerperLeicht`) statt `A`/`B`. Grundübungen sind einzelne Straight-Set-Blöcke (volle Pause), nur die Arm-Isolation bleibt als Superset. Jeder Block hat jetzt ein `zielWdh`-Feld (Ziel-Wiederholungsbereich), das in `workout-session.js` sowohl in der Vorschau als auch in der aktiven Session angezeigt wird. `makroziele` hat `A`/`B` zu einem gemeinsamen `trainingstag`-Key konsolidiert (Werte waren identisch); `heute.js`/`ernaehrung.js` lesen den Key jetzt über `Rotation.getDatenKey()` statt direkt über `today.typ`.
+
+**Progression:** Kein Auto-Tracking — wenn alle Sätze einer Übung am oberen Ende des `zielWdh`-Bereichs erreicht werden, Gewicht beim nächsten Mal um 2,5–5% steigern und unten im Bereich neu starten (Julius wendet das selbst an).
+
+**Wochenziel in `fortschritt.js`** von 4 auf **5** Einheiten erhöht (4 Kraft + 1 Lauf).
+
+Bei künftigen Anpassungen am Plan: Übungsauswahl/Reihenfolge in `data.js` unter `Data.plaene`, Wochentag-Zuordnung in `rotation.js` unter `Rotation.TAGE`.
+
 ## Workout-Picker Feature (07.07.2026)
 
 Training-Tab zeigt jetzt einen tagesunabhängigen Workout-Picker (Ganzkörper A/B, Running) statt eines starr an die A/B-Rotation gebundenen Einzel-Workouts. Persistenter Timer + Übungs-Checkboxen (State in `localStorage`, übersteht Reload). Generische Offline-Warteschlange in `sheets.js` für alle drei Sheets. Details: `docs/specs/2026-07-07-workout-picker-design.md`, `docs/plans/2026-07-07-workout-picker.md`.

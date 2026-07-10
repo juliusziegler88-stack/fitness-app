@@ -1,55 +1,43 @@
 window.Data = {
   makroziele: {
-    A:        { kcal: 2350, protein: 160, carbs: 290, fett: 60 },
-    B:        { kcal: 2350, protein: 160, carbs: 290, fett: 60 },
-    ausdauer: { kcal: 2300, protein: 160, carbs: 275, fett: 60 },
-    ruhetag:  { kcal: 2100, protein: 160, carbs: 210, fett: 60 }
+    trainingstag: { kcal: 2350, protein: 160, carbs: 290, fett: 60 },
+    ausdauer:     { kcal: 2300, protein: 160, carbs: 275, fett: 60 },
+    ruhetag:      { kcal: 2100, protein: 160, carbs: 210, fett: 60 }
   },
 
   plaene: {
-    A: [
+    unterkoerperSchwer: [
+      { name: 'Kniebeuge LH — 4 Sätze', uebungen: ['Kniebeuge LH'], zielWdh: '5-8' },
+      { name: 'Rumänisches Kreuzheben LH — 3 Sätze', uebungen: ['Rumänisches Kreuzheben LH'], zielWdh: '6-8' },
+      { name: 'Beinpresse — 3 Sätze', uebungen: ['Beinpresse (Gerät)'], zielWdh: '6-10' },
+      { name: 'Cable Crunch — 3 Sätze', uebungen: ['Cable Crunch'], zielWdh: '10-15' },
+      { name: 'Decline Weighted Sit-Up — 3 Sätze', uebungen: ['Decline Weighted Sit-Up'], zielWdh: '12-15' }
+    ],
+    oberkoerperSchwer: [
+      { name: 'Langhantel Bankdrücken — 4 Sätze', uebungen: ['Langhantel Bankdrücken'], zielWdh: '5-8' },
+      { name: 'Schulterdrücken LH — 3 Sätze', uebungen: ['Schulterdrücken LH'], zielWdh: '6-8' },
+      { name: 'Klimmzüge — 3 Sätze', uebungen: ['Klimmzüge'], zielWdh: '5-8' },
+      { name: 'Kabelrudern sitzend — 3 Sätze', uebungen: ['Kabelrudern sitzend'], zielWdh: '8-10' },
+      { name: 'Kabelzug Fliegende — 3 Sätze', uebungen: ['Kabelzug Fliegende'], zielWdh: '10-12' },
+      { name: 'Superset — 2 Sätze', uebungen: ['Bizepscurl KH', 'Trizeps-Pushdown (Kabel)'], zielWdh: '12-15' }
+    ],
+    unterkoerperLeicht: [
+      { name: 'Bulgarische Kniebeuge KH — 3 Sätze', uebungen: ['Bulgarische Kniebeuge KH'], zielWdh: '10-15' },
+      { name: 'Beinbeuger — 3 Sätze', uebungen: ['Beinbeuger (Gerät)'], zielWdh: '12-15' },
+      { name: 'Sitzendes Wadenheben — 3 Sätze', uebungen: ['Sitzendes Wadenheben'], zielWdh: '12-15' },
+      { name: 'Hanging Leg Raise — 3 Sätze', uebungen: ['Hanging Leg Raise'], zielWdh: '10-15' },
       {
-        name: 'Superset 1 — 4 Sätze',
-        uebungen: ['Schrägbankdrücken KH', 'Einarmiges KH Rudern (Schrägbank)']
-      },
-      {
-        name: 'Superset 2 — 4 Sätze',
-        uebungen: ['Kniebeuge LH', 'KH Romanian Deadlift']
-      },
-      {
-        name: 'Superset 3 — 3 Sätze',
-        uebungen: ['Schulterdrücken KH', 'Klimmzüge']
-      },
-      {
-        name: 'Superset 4 — 3 Sätze',
-        uebungen: ['Overhead Trizepsdrücken KH', 'Bizepscurl KH']
-      },
-      {
-        name: 'Finisher',
-        uebungen: ['Core', '10 min Conditioning (Rudergerät oder Seilspringen)']
+        name: 'Core-Kettlebell-Zirkel — 2 Runden',
+        uebungen: ['KB Russian Twist (15/Seite)', 'KB Halo (8/Richtung)', 'KB Deadbug (10/Seite)']
       }
     ],
-    B: [
-      {
-        name: 'Superset 1 — 4 Sätze',
-        uebungen: ['Flachbankdrücken KH', 'Vorgebeugtes Rudern LH']
-      },
-      {
-        name: 'Superset 2 — 4 Sätze',
-        uebungen: ['Kreuzheben LH', 'Bulgarische Kniebeuge KH']
-      },
-      {
-        name: 'Superset 3 — 3 Sätze',
-        uebungen: ['Seitheben KH', 'Reverse Fly KH']
-      },
-      {
-        name: 'Superset 4 — 3 Sätze',
-        uebungen: ['Bizepscurl KH (alternierend)', 'Dips']
-      },
-      {
-        name: 'Finisher',
-        uebungen: ['Core', '10 min Conditioning (Rudergerät oder Seilspringen)']
-      }
+    oberkoerperLeicht: [
+      { name: 'Flachbankdrücken KH — 3 Sätze', uebungen: ['Flachbankdrücken KH'], zielWdh: '10-15' },
+      { name: 'Butterfly-Maschine — 3 Sätze', uebungen: ['Butterfly-Maschine (Pec Deck)'], zielWdh: '10-15' },
+      { name: 'Chest-Supported Row — 3 Sätze', uebungen: ['Chest-Supported Row'], zielWdh: '10-15' },
+      { name: 'Seitheben am Kabelturm — 3 Sätze', uebungen: ['Seitheben am Kabelturm'], zielWdh: '12-15' },
+      { name: 'Face Pull — 3 Sätze', uebungen: ['Face Pull (Kabel)'], zielWdh: '15-20' },
+      { name: 'Superset — 2 Sätze', uebungen: ['Bizepscurl KH', 'Trizeps-Pushdown (Kabel)'], zielWdh: '12-15' }
     ]
   },
 
@@ -245,8 +233,10 @@ window.Data = {
 };
 
 window.Data.workouts = [
-  { id: 'A', name: 'Ganzkörper A', typ: 'kraft', plan: window.Data.plaene.A },
-  { id: 'B', name: 'Ganzkörper B', typ: 'kraft', plan: window.Data.plaene.B },
-  { id: 'running', name: 'Running', typ: 'cardio', text: 'Mindestens 30–45 min kontinuierliche Ausdauer: Laufen, Fahrrad, Rudergerät oder Schwimmen. Intensität: moderate Herzfrequenz (Zone 2), du kannst noch sprechen.' },
+  { id: 'unterkoerper_schwer', name: 'Unterkörper schwer', typ: 'kraft', plan: window.Data.plaene.unterkoerperSchwer },
+  { id: 'oberkoerper_schwer', name: 'Oberkörper schwer', typ: 'kraft', plan: window.Data.plaene.oberkoerperSchwer },
+  { id: 'unterkoerper_leicht', name: 'Unterkörper leicht', typ: 'kraft', plan: window.Data.plaene.unterkoerperLeicht },
+  { id: 'oberkoerper_leicht', name: 'Oberkörper leicht', typ: 'kraft', plan: window.Data.plaene.oberkoerperLeicht },
+  { id: 'running', name: 'Running', typ: 'cardio', text: 'Zone 2, 30–45 min. Ca. 1x/Monat etwas zügiger (Tempo/Intervalle). Intensität locker: moderate Herzfrequenz, du kannst noch sprechen.' },
   { id: 'sonstiges', name: 'Sonstige Aktivität', typ: 'sonstiges' }
 ];

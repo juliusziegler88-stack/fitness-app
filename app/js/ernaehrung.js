@@ -8,7 +8,7 @@ window.Ernaehrung = {
   async render() {
     this.today = Rotation.getToday();
     this.datenKey = Rotation.getDatenKey(this.today.typ);
-    this.ziel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
+    this.ziel = Data.makroziele[this.datenKey] || Data.makroziele['ruhetag'];
     await this._loadGegessen();
 
     const mahlzeiten = ['Frühstück', 'Mittagessen', 'After Workout', 'Abendessen'];

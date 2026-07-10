@@ -162,7 +162,7 @@ window.Fortschritt = {
         .map(r => r[0])
     ).size;
 
-    const ziel = 4;
+    const ziel = 5;
     el.innerHTML = `
       <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">
         <span style="font-size:36px;font-weight:700;color:var(--accent)">${dieseWoche}</span>
@@ -207,9 +207,11 @@ window.Fortschritt = {
 
   _getAlleUebungen() {
     return [
-      ...Data.plaene.A.flatMap(ss => ss.uebungen),
-      ...Data.plaene.B.flatMap(ss => ss.uebungen)
-    ].filter((u, i, a) => a.indexOf(u) === i && !u.includes('Conditioning') && u !== 'Core');
+      ...Data.plaene.unterkoerperSchwer.flatMap(ss => ss.uebungen),
+      ...Data.plaene.oberkoerperSchwer.flatMap(ss => ss.uebungen),
+      ...Data.plaene.unterkoerperLeicht.flatMap(ss => ss.uebungen),
+      ...Data.plaene.oberkoerperLeicht.flatMap(ss => ss.uebungen)
+    ].filter((u, i, a) => a.indexOf(u) === i);
   },
 
   _chartOptions(unit) {

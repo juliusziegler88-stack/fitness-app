@@ -72,7 +72,7 @@ window.WorkoutSession = {
         ${isKraft
           ? workout.plan.map(ss => `
               <div style="margin-bottom:14px">
-                <div class="section-title">${ss.name}</div>
+                <div class="section-title">${ss.name}${ss.zielWdh ? ` · Ziel: ${ss.zielWdh} Wdh` : ''}</div>
                 ${ss.uebungen.map(u => `<div style="padding:4px 0;font-size:15px">· ${u}</div>`).join('')}
               </div>
             `).join('')
@@ -114,7 +114,7 @@ window.WorkoutSession = {
             return `
               <div class="superset-group">
                 <div class="superset-label">${ss.name}</div>
-                ${uebungen.map(u => this._renderExerciseRow(u, session)).join('')}
+                ${uebungen.map(u => this._renderExerciseRow(u, session, ss.zielWdh)).join('')}
               </div>
             `;
           }).join('')
@@ -147,7 +147,7 @@ window.WorkoutSession = {
     this._startTimer(session.startedAt);
   },
 
-  _renderExerciseRow(uebung, session) {
+  _renderExerciseRow(uebung, session, zielWdh) {
     const prev = this.letzteSession[uebung];
     const prevText = prev ? `Letztes Mal: ${prev.gewicht} kg × ${prev.saetze} Sätze × ${prev.reps} Wdh` : 'Erstes Mal';
     const id = uebung.replace(/\s/g, '_');
@@ -158,6 +158,7 @@ window.WorkoutSession = {
           <div class="meal-check ${done ? 'done' : ''}" id="check_${id}"></div>
           <div class="exercise-name ${done ? 'done' : ''}" style="margin-bottom:0">${uebung}</div>
         </div>
+        ${zielWdh ? `<div class="exercise-prev">Ziel: ${zielWdh} Wdh</div>` : ''}
         <div class="exercise-prev">${prevText}</div>
         <div class="log-inputs">
           <div>

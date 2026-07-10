@@ -7,7 +7,7 @@ window.Heute = {
 
   async render() {
     this.today = Rotation.getToday();
-    this.basisZiel = Data.makroziele[this.today.typ] || Data.makroziele['ruhetag'];
+    this.basisZiel = Data.makroziele[Rotation.getDatenKey(this.today.typ)] || Data.makroziele['ruhetag'];
     this.schritte = Schritte.getToday();
     this.ziel = this._buildZiel();
 
