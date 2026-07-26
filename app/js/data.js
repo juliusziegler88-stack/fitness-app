@@ -30,8 +30,8 @@ window.Data = {
     ],
     oberkoerperLeicht: [
       { name: 'Flachbankdrücken KH — 3 Sätze', uebungen: ['Flachbankdrücken KH'], zielWdh: '10-15' },
-      { name: 'Butterfly-Maschine — 3 Sätze', uebungen: ['Butterfly-Maschine (Pec Deck)'], zielWdh: '10-15' },
       { name: 'Chest-Supported Row — 3 Sätze', uebungen: ['Chest-Supported Row'], zielWdh: '10-15' },
+      { name: 'Kabelzug Fliegende — 3 Sätze', uebungen: ['Kabelzug Fliegende'], zielWdh: '10-15' },
       { name: 'Seitheben am Kabelturm — 3 Sätze', uebungen: ['Seitheben am Kabelturm'], zielWdh: '12-15' },
       { name: 'Face Pull — 3 Sätze', uebungen: ['Face Pull (Kabel)'], zielWdh: '15-20' },
       { name: 'Superset — 2 Sätze', uebungen: ['Bizepscurl KH', 'Trizeps-Pushdown (Kabel)'], zielWdh: '12-15' }
