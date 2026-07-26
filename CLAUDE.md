@@ -65,6 +65,8 @@ Bei künftigen Anpassungen am Plan: Übungsauswahl/Reihenfolge in `data.js` unte
 
 **Anpassung Unterkörper leicht (27.07.2026):** Sitzendes Wadenheben entfernt, dafür mehr Bauchfokus — Tag ist jetzt bewusst halb Bein/halb Bauch. Aktuelle Übungsliste: Bulgarische Kniebeuge KH, Beinbeuger, Hanging Leg Raise, Cable Crunch, KB Russian Twist (alle 3 Sätze, 12-15 Wdh). Der alte "Core-Kettlebell-Zirkel" (KB Russian Twist + KB Halo + KB Deadbug als Runden-Zirkel) wurde aufgelöst — KB Halo und KB Deadbug sind komplett raus, Russian Twist läuft jetzt als eigenständiger Satz-Block statt im Zirkel.
 
+**Anpassung Oberkörper leicht (27.07.2026):** Reihenfolge geändert und eine Übung ersetzt. Chest-Supported Row rückt von Platz 3 auf Platz 2 (direkt nach Flachbankdrücken KH). Butterfly-Maschine (Pec Deck) komplett rausgeworfen, ersetzt durch Kabelzug Fliegende (gleiche Bewegung/gleicher Name wie in Oberkörper schwer, nur am Kabelturm statt an der Maschine). Rest der Reihenfolge (Seitheben am Kabelturm, Face Pull, Superset Bizeps/Trizeps) unverändert.
+
 ## Workout-Picker Feature (07.07.2026)
 
 Training-Tab zeigt jetzt einen tagesunabhängigen Workout-Picker (Ganzkörper A/B, Running) statt eines starr an die A/B-Rotation gebundenen Einzel-Workouts. Persistenter Timer + Übungs-Checkboxen (State in `localStorage`, übersteht Reload). Generische Offline-Warteschlange in `sheets.js` für alle drei Sheets. Details: `docs/specs/2026-07-07-workout-picker-design.md`, `docs/plans/2026-07-07-workout-picker.md`.
