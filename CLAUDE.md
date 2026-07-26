@@ -63,6 +63,8 @@ Alte A/B-Ganzkörper-Rotation komplett ersetzt durch festen Upper/Lower-x2-Split
 
 Bei künftigen Anpassungen am Plan: Übungsauswahl/Reihenfolge in `data.js` unter `Data.plaene`, Wochentag-Zuordnung in `rotation.js` unter `Rotation.TAGE`.
 
+**Anpassung Unterkörper leicht (27.07.2026):** Sitzendes Wadenheben entfernt, dafür mehr Bauchfokus — Tag ist jetzt bewusst halb Bein/halb Bauch. Aktuelle Übungsliste: Bulgarische Kniebeuge KH, Beinbeuger, Hanging Leg Raise, Cable Crunch, KB Russian Twist (alle 3 Sätze, 12-15 Wdh). Der alte "Core-Kettlebell-Zirkel" (KB Russian Twist + KB Halo + KB Deadbug als Runden-Zirkel) wurde aufgelöst — KB Halo und KB Deadbug sind komplett raus, Russian Twist läuft jetzt als eigenständiger Satz-Block statt im Zirkel.
+
 ## Workout-Picker Feature (07.07.2026)
 
 Training-Tab zeigt jetzt einen tagesunabhängigen Workout-Picker (Ganzkörper A/B, Running) statt eines starr an die A/B-Rotation gebundenen Einzel-Workouts. Persistenter Timer + Übungs-Checkboxen (State in `localStorage`, übersteht Reload). Generische Offline-Warteschlange in `sheets.js` für alle drei Sheets. Details: `docs/specs/2026-07-07-workout-picker-design.md`, `docs/plans/2026-07-07-workout-picker.md`.
