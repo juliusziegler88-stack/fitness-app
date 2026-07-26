@@ -24,12 +24,9 @@ window.Data = {
     unterkoerperLeicht: [
       { name: 'Bulgarische Kniebeuge KH — 3 Sätze', uebungen: ['Bulgarische Kniebeuge KH'], zielWdh: '10-15' },
       { name: 'Beinbeuger — 3 Sätze', uebungen: ['Beinbeuger (Gerät)'], zielWdh: '12-15' },
-      { name: 'Sitzendes Wadenheben — 3 Sätze', uebungen: ['Sitzendes Wadenheben'], zielWdh: '12-15' },
-      { name: 'Hanging Leg Raise — 3 Sätze', uebungen: ['Hanging Leg Raise'], zielWdh: '10-15' },
-      {
-        name: 'Core-Kettlebell-Zirkel — 2 Runden',
-        uebungen: ['KB Russian Twist (15/Seite)', 'KB Halo (8/Richtung)', 'KB Deadbug (10/Seite)']
-      }
+      { name: 'Hanging Leg Raise — 3 Sätze', uebungen: ['Hanging Leg Raise'], zielWdh: '12-15' },
+      { name: 'Cable Crunch — 3 Sätze', uebungen: ['Cable Crunch'], zielWdh: '12-15' },
+      { name: 'KB Russian Twist — 3 Sätze', uebungen: ['KB Russian Twist'], zielWdh: '12-15/Seite' }
     ],
     oberkoerperLeicht: [
       { name: 'Flachbankdrücken KH — 3 Sätze', uebungen: ['Flachbankdrücken KH'], zielWdh: '10-15' },
